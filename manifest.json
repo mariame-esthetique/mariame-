@@ -1,0 +1,18 @@
+{
+  "name": "Mariame A. — Esthéticienne à Dakar",
+  "short_name": "Mariame A.",
+  "description": "Prenez rendez-vous en ligne : épilation au fil, soins du visage, Carbon Laser, lipocavitation, tatouage et détatouage. Dakar Plateau.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#170B16",
+  "theme_color": "#170B16",
+  "lang": "fr",
+  "categories": ["beauty", "lifestyle"],
+  "icons": [
+    { "src": "icon.png", "sizes": "180x180", "type": "image/png" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

@@ -9,6 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="Mariame A.">
 <title>Mariame A. — Esthéticienne à Dakar Plateau | Épilation au fil, Carbon Laser, soins</title>
 <meta name="description" content="Institut d'esthétique à Dakar Plateau : épilation au fil et à la cire, soins du visage, lipocavitation, Carbon Laser, tatouage et détatouage. Réservation en ligne, 60 rue Jules Ferry.">
+<link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon.png">
 <link rel="icon" href="icon.png">
 <meta property="og:title" content="Mariame A. — Esthéticienne à Dakar Plateau">
@@ -1024,6 +1025,32 @@ async function sauverTarif(id){
   }).eq('id',id);
   if(error) return toast('Erreur : '+error.message,true);
   await chargerPrestations(); S.edit=null; rendre(); toast('Tarif enregistré');
+}
+
+
+/* ---- Mise a jour automatique ---- */
+if('serviceWorker' in navigator){
+  navigator.serviceWorker.register('sw.js').then(reg=>{
+    reg.addEventListener('updatefound',()=>{
+      const nouveau=reg.installing;
+      if(!nouveau) return;
+      nouveau.addEventListener('statechange',()=>{
+        if(nouveau.state==='installed' && navigator.serviceWorker.controller){
+          const b=document.createElement('div');
+          b.className='toast';
+          b.style.cursor='pointer';
+          b.textContent='Nouvelle version disponible \u2014 toucher pour actualiser';
+          b.onclick=()=>{ nouveau.postMessage('maj'); location.reload(); };
+          document.body.appendChild(b);
+        }
+      });
+    });
+    setInterval(()=>reg.update(), 60*60*1000);
+  }).catch(()=>{});
+  let recharge=false;
+  navigator.serviceWorker.addEventListener('controllerchange',()=>{
+    if(recharge) return; recharge=true; location.reload();
+  });
 }
 
 initialiser();
