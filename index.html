@@ -8,7 +8,6 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Mariame">
 <title>Mariame · Esthétique — Salon Podium</title>
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='14' fill='%23170B16'/><text x='32' y='44' font-size='34' text-anchor='middle' fill='%23E3B85F' font-family='Georgia,serif'>M</text></svg>">
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Italiana&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Outfit:wght@200;300;400;500&display=swap');
 
@@ -73,12 +72,526 @@ h1,h2,.disp{font-family:'Cormorant Garamond',Georgia,serif;font-weight:300;margi
 
 .strip{display:flex;gap:8px;overflow-x:auto;padding:2px 0 12px;-webkit-overflow-scrolling:touch}
 .strip::-webkit-scrollbar{display:none}
-.day{flex:0 0 auto;width:60px;padding:11px 0;border-radius:14px;background:rgba(255,255,
+.day{flex:0 0 auto;width:60px;padding:11px 0;border-radius:14px;background:rgba(255,255,255,.05);border:1px solid var(--ligne);color:var(--ivoire);font-family:inherit;cursor:pointer;text-align:center;transition:.18s}
+.day.sel{background:linear-gradient(150deg,var(--or-clair),var(--or));border-color:var(--or);color:#2A1206}
+.day.off{opacity:.28}
+.day .a{font-size:10px;letter-spacing:.12em;text-transform:uppercase}
+.day .b{font-family:'Cormorant Garamond',serif;font-size:22px;margin:1px 0}
+.day .c{font-size:9.5px;opacity:.72}
+
+.slots{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.slot{padding:12px 0;border-radius:11px;background:rgba(255,255,255,.05);border:1px solid var(--ligne);color:var(--ivoire);font-family:inherit;font-size:13.5px;cursor:pointer;transition:.18s}
+.slot.sel{background:linear-gradient(150deg,var(--or-clair),var(--or));border-color:var(--or);color:#2A1206;font-weight:500}
+.slot.taken{opacity:.25;text-decoration:line-through}
+
+.field{margin-bottom:13px}
+.field label{display:block;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--doux);margin-bottom:7px}
+.field input{width:100%;background:rgba(255,255,255,.05);border:1px solid var(--ligne);border-radius:11px;padding:13px;color:var(--ivoire);font-family:inherit;font-size:16px}
+.field input::placeholder{color:#7C6178}
+
+.btn{width:100%;padding:16px;border-radius:13px;border:0;background:linear-gradient(140deg,var(--or-clair),var(--or));color:#2A1206;font-family:inherit;font-size:12px;font-weight:500;letter-spacing:.16em;text-transform:uppercase;cursor:pointer;margin-top:8px}
+.btn:disabled{opacity:.32}
+.btn.ghost{background:transparent;border:1px solid var(--ligne);color:var(--ivoire)}
+.btn.rose{background:transparent;border:1px solid var(--rose);color:var(--rose)}
+.btn.sm{padding:10px 16px;width:auto;font-size:10.5px;display:inline-block;text-decoration:none;text-align:center}
+
+.pay{display:flex;align-items:center;gap:13px}
+.logo{width:42px;height:42px;border-radius:11px;display:grid;place-items:center;font-size:10px;font-weight:600;flex:0 0 auto;color:#fff}
+.l-wave{background:#1DC8F2;color:#003}.l-om{background:#FF7900;color:#1A1206}
+.l-free{background:#CD1E2C}.l-cb{background:linear-gradient(135deg,#4B3B78,#8878C4)}
+.l-place{background:rgba(255,255,255,.08);border:1px solid var(--ligne);color:var(--or)}
+
+.tabs{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:440px;display:flex;background:rgba(23,11,22,.94);backdrop-filter:blur(16px);border-top:1px solid var(--ligne);padding:10px 6px calc(14px + env(safe-area-inset-bottom));z-index:40}
+.tabs button{flex:1;background:none;border:0;color:var(--doux);cursor:pointer;font-family:inherit;font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;display:flex;flex-direction:column;align-items:center;gap:6px;padding:3px 0}
+.tabs button.on{color:var(--or)}
+.tabs svg{width:19px;height:19px;stroke:currentColor;fill:none;stroke-width:1.3;stroke-linecap:round;stroke-linejoin:round}
+
+.empty{text-align:center;padding:46px 24px}
+.empty .disp{font-size:24px;font-style:italic;margin-bottom:9px}
+.empty p{font-size:13px;color:var(--doux);font-weight:200;line-height:1.6;margin:0}
+.pill{display:inline-block;font-size:9px;letter-spacing:.16em;text-transform:uppercase;padding:5px 10px;border-radius:999px;border:1px solid var(--ligne);color:var(--doux)}
+.pill.attente{border-color:var(--or);color:var(--or)}
+.pill.ok{border-color:#7FC4A0;color:#7FC4A0}
+.pill.non{border-color:var(--rose);color:var(--rose)}
+.row{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.hint{font-size:11.5px;color:var(--doux);line-height:1.6;font-weight:200}
+.toast{position:fixed;bottom:108px;left:50%;transform:translateX(-50%);background:linear-gradient(140deg,var(--or-clair),var(--or));color:#2A1206;padding:12px 22px;border-radius:999px;font-size:12.5px;font-weight:500;z-index:60;max-width:88%;text-align:center}
+.toast.err{background:var(--rose);color:#2A0A12}
+.recap{border:1px solid var(--or);border-radius:16px;padding:18px;margin-bottom:18px;background:linear-gradient(160deg,rgba(227,184,95,.14),rgba(227,184,95,.03))}
+.recap .l{display:flex;justify-content:space-between;padding:7px 0;font-size:14px;align-items:baseline;gap:10px}
+.recap .l span:first-child{color:var(--doux);font-size:10px;letter-spacing:.16em;text-transform:uppercase;flex:0 0 auto}
+.recap .tot{border-top:1px solid var(--ligne);margin-top:8px;padding-top:12px}
+.recap .tot span:last-child{font-family:'Cormorant Garamond',serif;font-size:24px;color:var(--or)}
+
+.social{display:flex;gap:9px;margin-top:12px}
+.social a{flex:1;text-align:center;padding:13px 4px;border-radius:12px;border:1px solid var(--ligne);color:var(--ivoire);text-decoration:none;font-size:10px;letter-spacing:.1em;text-transform:uppercase;background:rgba(255,255,255,.04)}
+
+.map{position:relative;display:block;width:100%;padding:0;border:1px solid var(--ligne);border-radius:18px;overflow:hidden;background:#1C0E1B;text-decoration:none;color:inherit}
+.map svg.plan{display:block;width:100%;height:190px}
+.map .pin{position:absolute;top:44%;left:50%;width:16px;height:16px;margin:-8px 0 0 -8px;border-radius:50%;background:var(--or);border:2px solid #2A1206;z-index:3}
+.map .halo{position:absolute;top:44%;left:50%;width:16px;height:16px;margin:-8px 0 0 -8px;border-radius:50%;background:var(--or);opacity:.45;z-index:2;animation:pulse 2.4s ease-out infinite}
+@keyframes pulse{0%{transform:scale(1);opacity:.45}70%{transform:scale(4.2);opacity:0}100%{opacity:0}}
+.map .bar{position:absolute;left:0;right:0;bottom:0;z-index:4;padding:14px 16px;background:linear-gradient(180deg,transparent,rgba(23,11,22,.94) 55%);display:flex;justify-content:space-between;align-items:flex-end;gap:12px}
+.map .adr{font-family:'Cormorant Garamond',serif;font-size:17px;line-height:1.25}
+.map .go{flex:0 0 auto;font-size:10px;letter-spacing:.14em;text-transform:uppercase;padding:9px 14px;border-radius:999px;background:linear-gradient(140deg,var(--or-clair),var(--or));color:#2A1206;font-weight:500}
+
+.tgl{width:44px;height:25px;border-radius:999px;border:1px solid var(--ligne);background:rgba(255,255,255,.06);position:relative;flex:0 0 auto;transition:.2s;cursor:pointer}
+.tgl::after{content:'';position:absolute;top:2px;left:2px;width:19px;height:19px;border-radius:50%;background:var(--doux);transition:.22s}
+.tgl.on{background:linear-gradient(140deg,var(--or-clair),var(--or));border-color:var(--or)}
+.tgl.on::after{left:21px;background:#2A1206}
+
+.wave-box{border:1px dashed var(--or);border-radius:14px;padding:16px;margin:4px 0 12px;text-align:center}
+.wave-box .num{font-family:'Cormorant Garamond',serif;font-size:27px;color:var(--or);letter-spacing:.04em;margin:6px 0}
+
+button:focus-visible,input:focus-visible,a:focus-visible{outline:2px solid var(--or);outline-offset:2px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+.load{padding:70px 24px;text-align:center;color:var(--doux);font-size:13px;font-weight:200}
+</style>
+</head>
+<body>
+<div id="app"><div class="load">Chargement…</div></div>
+
+<script>
+window.onerror = function(msg, src, ligne){
+  document.getElementById('app').innerHTML =
+    '<div class="load" style="text-align:left;font-size:12px;color:#E08A9B">'
+    + 'ERREUR : ' + msg + '<br><br>ligne ' + ligne + '</div>';
+};
+window.addEventListener('unhandledrejection', function(e){
+  document.getElementById('app').innerHTML =
+    '<div class="load" style="text-align:left;font-size:12px;color:#E08A9B">'
+    + 'ERREUR RESEAU : ' + (e.reason && e.reason.message ? e.reason.message : e.reason) + '</div>';
+});
+</script>
+
+<script type="module">
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+
+/* ============ CONFIGURATION ============ */
+const SB_URL = 'https://damnaquodhnexbucwsll.supabase.co';
+const SB_KEY = 'sb_publishable_xDbNZTdbqJo8_Hltx7ksEw_E90cSmBg';
+const WA      = '221788242473';
+const WA_AFF  = '+221 78 824 24 73';
+const EMAIL   = 'mariameattieh1979@gmail.com';
+const ADRESSE = '60 rue Jules Ferry, Dakar Plateau';
+const TIKTOK  = 'mariame.salonpodium';
+const INSTA   = 'mariame_salonpodium';
+const ITINERAIRE = 'https://www.google.com/maps/dir/?api=1&destination='
+  + encodeURIComponent('60 Rue Jules Ferry, Dakar, Sénégal') + '&travelmode=driving';
+
+const sb = createClient(SB_URL, SB_KEY);
+
+/* ============ OUTILS ============ */
+const P = n => String(n).padStart(2,'0');
+const iso = d => `${d.getFullYear()}-${P(d.getMonth()+1)}-${P(d.getDate())}`;
+const JOURS = ['Dim','Lun','Mar','Mer','Jeu','Ven','Sam'];
+const MOIS  = ['janv','févr','mars','avr','mai','juin','juil','août','sept','oct','nov','déc'];
+const MOIS_L= ['janvier','février','mars','avril','mai','juin','juillet','août','septembre','octobre','novembre','décembre'];
+const prochains = n => { const t=new Date(); return Array.from({length:n},(_,i)=>new Date(t.getFullYear(),t.getMonth(),t.getDate()+i)); };
+function creneauxDef(d){ if(d.getDay()===0) return []; const o=[]; for(let h=9;h<=18;h++){o.push(P(h)+':00'); if(h<18)o.push(P(h)+':30');} return o; }
+const TOUS_CRENEAUX = creneauxDef(new Date(2026,0,2));
+function libDate(s){ const [y,m,d]=s.split('-').map(Number); return `${JOURS[new Date(y,m-1,d).getDay()].toLowerCase()}. ${d} ${MOIS_L[m-1]}`; }
+const fcfa = n => (n==null||n==='') ? null : Number(n).toLocaleString('fr-FR').replace(/\u202f|\u00a0/g,' ') + ' F';
+const esc = s => String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+const CATS = [
+  {id:'fil',  nom:'Épilation au fil',      sous:'Sourcils, lèvre, visage',              cls:'g-fil'},
+  {id:'cire', nom:'Cire & pince',          sous:'Aisselles, maillot, jambes',           cls:'g-cire'},
+  {id:'soin', nom:'Soins & technologies',  sous:'Visage, lipocavitation, Carbon Laser', cls:'g-soin'},
+  {id:'encre',nom:'Encre',                 sous:'Tatouage & détatouage',                cls:'g-encre'},
+];
+const MOYENS = [
+  {id:'wave', nom:'Wave',           desc:'Acompte par Wave',        cls:'l-wave', court:'wave'},
+  {id:'om',   nom:'Orange Money',   desc:'Acompte par OM',          cls:'l-om',   court:'OM'},
+  {id:'free', nom:'Free Money',     desc:'Acompte par Free Money',  cls:'l-free', court:'Free'},
+  {id:'place',nom:'Régler sur place',desc:'Le jour du rendez-vous', cls:'l-place',court:'★'},
+];
+
+/* ============ ÉTAT ============ */
+const S = {
+  pret:false, user:null, profil:null, vue:'client', tab:'reserver',
+  prestations:[], rdvs:[], dispos:{}, prisCache:{}, clientes:[],
+  etape:0, cat:null, choix:null, jour:null, heure:null, moyen:'wave',
+  form:{nom:'',tel:'',email:''}, ref:'', authMode:'connexion',
+  auth:{email:'',mdp:'',nom:'',tel:''}, jourAdmin:iso(new Date()), edit:null, busy:false
+};
+const JOURS_LISTE = prochains(21);
+
+function toast(msg, err){
+  const t=document.createElement('div');
+  t.className='toast'+(err?' err':''); t.textContent=msg; document.body.appendChild(t);
+  setTimeout(()=>t.remove(),2900);
+}
+const ouverts = j => (S.dispos[j] !== undefined) ? S.dispos[j] : creneauxDef(new Date(...j.split('-').map((v,i)=>i===1?+v-1:+v)));
+
+/* ============ DONNÉES ============ */
+async function chargerPrestations(){
+  const {data,error}=await sb.from('prestations').select('*').eq('actif',true).order('ordre');
+  if(!error) S.prestations=data||[];
+}
+async function chargerDispos(){
+  const {data}=await sb.from('disponibilites').select('*').gte('jour',iso(new Date()));
+  S.dispos={}; (data||[]).forEach(d=>S.dispos[d.jour]=d.creneaux||[]);
+}
+async function chargerRdvs(){
+  if(!S.user){S.rdvs=[];return;}
+  const {data}=await sb.from('rendez_vous').select('*').order('jour').order('heure');
+  S.rdvs=data||[];
+}
+async function chargerClientes(){
+  const {data}=await sb.from('profils').select('*').order('cree_le',{ascending:false});
+  S.clientes=data||[];
+}
+async function chargerPris(j){
+  const {data}=await sb.rpc('creneaux_pris',{p_jour:j});
+  S.prisCache[j]=(data||[]).map(r=>r.heure);
+}
+async function chargerProfil(){
+  if(!S.user){S.profil=null;return;}
+  const {data}=await sb.from('profils').select('*').eq('id',S.user.id).maybeSingle();
+  S.profil=data||null;
+  if(data){ S.form={nom:data.nom||'',tel:data.tel||'',email:data.email||''}; }
+}
+const estAdmin = () => S.profil && S.profil.role==='admin';
+
+async function initialiser(){
+  const {data:{session}}=await sb.auth.getSession();
+  S.user=session?.user||null;
+  await Promise.all([chargerPrestations(),chargerDispos()]);
+  await chargerProfil();
+  if(S.user) await chargerRdvs();
+  S.pret=true; rendre();
+}
+sb.auth.onAuthStateChange(async (_e,session)=>{
+  const avant=S.user?.id;
+  S.user=session?.user||null;
+  if(S.user?.id!==avant){
+    await chargerProfil(); await chargerRdvs(); await chargerDispos();
+    S.tab = estAdmin() ? 'agenda' : 'reserver';
+    S.vue = estAdmin() ? 'admin' : 'client';
+    rendre();
+  }
+});
+
+/* ============ RENDU ============ */
+const app=document.getElementById('app');
+function rendre(){
+  if(!S.pret){app.innerHTML='<div class="load">Chargement…</div>';return;}
+  let h = entete();
+  if(!S.user){ h += ecranAuth(); }
+  else if(S.vue==='admin' && estAdmin()){ h += vueAdmin(); }
+  else { h += vueCliente(); }
+  app.innerHTML=h;
+  brancher();
+}
+
+function entete(){
+  let h=`<div class="hero">
+    <div class="calli">Mariame</div>
+    <div class="flour">· · ·</div>
+    <div class="lieu">Salon Podium — Dakar Plateau</div>
+    <div class="tag">Le soin, l'éclat et le détail</div>
+  </div>`;
+  if(S.user && estAdmin()){
+    h+=`<div class="switch">
+      <button class="${S.vue==='client'?'on':''}" data-vue="client">Vue cliente</button>
+      <button class="${S.vue==='admin'?'on':''}" data-vue="admin">Espace Mariame</button>
+    </div>`;
+  }
+  return h;
+}
+
+/* ---------- AUTHENTIFICATION ---------- */
+function ecranAuth(){
+  const c=S.authMode==='connexion';
+  return `<div class="body">
+    <div class="stitle">${c?'Se connecter':'Créer un compte'}</div>
+    <p class="hint" style="margin-bottom:16px">Un compte permet de réserver et de retrouver vos rendez-vous.</p>
+    ${c?'':`
+      <div class="field"><label>Nom et prénom</label><input id="a_nom" value="${esc(S.auth.nom)}" placeholder="Votre nom"></div>
+      <div class="field"><label>Téléphone (WhatsApp)</label><input id="a_tel" inputmode="tel" value="${esc(S.auth.tel)}" placeholder="77 000 00 00"></div>`}
+    <div class="field"><label>Email</label><input id="a_email" type="email" autocomplete="email" inputmode="email" value="${esc(S.auth.email)}" placeholder="vous@exemple.com"></div>
+    <div class="field"><label>Mot de passe</label><input id="a_mdp" type="password" autocomplete="${c?'current-password':'new-password'}" value="${esc(S.auth.mdp)}" placeholder="6 caractères minimum"></div>
+    <button class="btn" id="a_go" ${S.busy?'disabled':''}>${S.busy?'Un instant…':(c?'Se connecter':'Créer mon compte')}</button>
+    <button class="btn ghost" id="a_bascule">${c?"Je n'ai pas encore de compte":"J'ai déjà un compte"}</button>
+    <div class="stitle">L'institut</div>
+    ${blocCarte()}
+    ${blocContacts()}
+  </div>`;
+}
+
+/* ---------- VUE CLIENTE ---------- */
+function vueCliente(){
+  let h='';
+  if(S.tab==='reserver')      h+=rampe()+`<div class="body">${etapeReserver()}</div>`;
+  else if(S.tab==='mesrdv')   h+=`<div class="body">${mesRdv()}</div>`;
+  else                        h+=`<div class="body">${pageInstitut()}</div>`;
+  h+=barre([['reserver','Réserver','cal'],['mesrdv','Mes RDV','coeur'],['institut','Institut','lieu']]);
+  return h;
+}
+
+function rampe(){
+  const et=['Soin','Jour','Heure','Payer'];
+  return `<div class="rampe">${et.map((e,i)=>
+    (i>0?'<div class="rail"></div>':'')+
+    `<div class="bw"><div class="bulb ${i<=S.etape?'on':''}"></div><div class="blbl ${i<=S.etape?'on':''}">${e}</div></div>`
+  ).join('')}</div>`;
+}
+
+function etapeReserver(){
+  const P=S.prestations;
+  if(S.etape===0 && !S.cat){
+    return `<div class="stitle">Que souhaitez-vous ?</div>`+CATS.map(c=>
+      `<button class="tile" data-cat="${c.id}"><div class="img ${c.cls}"></div>
+        <div class="cap"><div class="t">${c.nom}</div><div class="s">${c.sous}</div></div></button>`).join('');
+  }
+  if(S.etape===0){
+    const cat=CATS.find(c=>c.id===S.cat);
+    return `<div class="stitle">${cat.nom}</div>`+
+      P.filter(p=>p.categorie===S.cat).map(p=>
+      `<button class="card" data-presta="${p.id}">
+        <span class="prix">${fcfa(p.prix_fcfa)||'sur devis'}</span>
+        <div class="nm">${esc(p.nom)}</div>
+        <div class="meta">${p.duree_min?p.duree_min+' minutes':'durée selon le projet'}</div>
+      </button>`).join('')+
+      `<button class="btn ghost" data-retour="cat">Autres prestations</button>`;
+  }
+  if(S.etape===1){
+    return `<div class="stitle">Choisissez un jour</div><div class="strip">`+
+      JOURS_LISTE.map(d=>{const s=iso(d),ok=ouverts(s).length>0;
+        return `<button class="day ${S.jour===s?'sel':''} ${ok?'':'off'}" ${ok?`data-jour="${s}"`:'disabled'}>
+          <div class="a">${JOURS[d.getDay()]}</div><div class="b">${d.getDate()}</div><div class="c">${MOIS[d.getMonth()]}</div></button>`;
+      }).join('')+`</div>
+      <p class="hint">Les jours estompés sont fermés.</p>
+      <button class="btn ghost" data-retour="0">Retour</button>`;
+  }
+  if(S.etape===2){
+    const pris=S.prisCache[S.jour]||[];
+    const libres=ouverts(S.jour);
+    return `<div class="stitle">${libDate(S.jour)}</div><div class="slots">`+
+      libres.map(hh=>{const t=pris.includes(hh);
+        return `<button class="slot ${S.heure===hh?'sel':''} ${t?'taken':''}" ${t?'disabled':`data-heure="${hh}"`}>${hh}</button>`;
+      }).join('')+`</div>
+      ${libres.length?'':'<p class="hint">Aucun créneau ouvert ce jour.</p>'}
+      <button class="btn ghost" data-retour="1">Changer de jour</button>`;
+  }
+  const p=S.prestations.find(x=>x.id===S.choix)||{};
+  const acompte = p.prix_fcfa ? Math.max(2000, Math.round(p.prix_fcfa*0.3/500)*500) : 5000;
+  const surPlace = S.moyen==='place';
+  return `
+  <div class="recap">
+    <div class="l"><span>Soin</span><span>${esc(p.nom)}</span></div>
+    <div class="l"><span>Quand</span><span>${libDate(S.jour)} · ${S.heure}</span></div>
+    <div class="l"><span>Durée</span><span>${p.duree_min?p.duree_min+' min':'à définir'}</span></div>
+    <div class="l tot"><span>${surPlace?'À régler sur place':'Acompte'}</span><span>${surPlace?(fcfa(p.prix_fcfa)||'sur devis'):fcfa(acompte)}</span></div>
+  </div>
+  <div class="stitle">Vos coordonnées</div>
+  <div class="field"><label>Nom et prénom</label><input id="f_nom" value="${esc(S.form.nom)}" placeholder="Votre nom"></div>
+  <div class="field"><label>Téléphone (WhatsApp)</label><input id="f_tel" inputmode="tel" value="${esc(S.form.tel)}" placeholder="77 000 00 00"></div>
+  <div class="stitle">Paiement</div>
+  ${MOYENS.map(m=>`<button class="card ${S.moyen===m.id?'sel':''}" data-moyen="${m.id}">
+      <div class="pay"><div class="logo ${m.cls}">${m.court}</div>
+      <div><div class="nm">${m.nom}</div><div class="meta">${m.desc}</div></div></div></button>`).join('')}
+  ${surPlace?`<p class="hint">Le créneau reste en attente jusqu'à confirmation par Mariame.</p>`:`
+    <div class="wave-box">
+      <div class="hint">Envoyez ${fcfa(acompte)} au numéro</div>
+      <div class="num">${WA_AFF}</div>
+      <div class="hint">puis recopiez le numéro de transaction reçu par SMS</div>
+    </div>
+    <div class="field"><label>Numéro de transaction</label><input id="f_ref" value="${esc(S.ref)}" placeholder="ex. TXN12345678"></div>`}
+  <button class="btn" id="valider" ${S.busy?'disabled':''}>${S.busy?'Envoi…':'Demander ce rendez-vous'}</button>
+  <button class="btn ghost" data-retour="2">Retour</button>`;
+}
+
+function mesRdv(){
+  if(!S.rdvs.length) return `<div class="stitle">Mes rendez-vous</div>
+    <div class="empty"><div class="disp">Rien de prévu</div><p>Vos rendez-vous apparaîtront ici après votre première réservation.</p></div>`;
+  return `<div class="stitle">Mes rendez-vous</div>`+S.rdvs.map(r=>{
+    const p=S.prestations.find(x=>x.id===r.prestation_id);
+    const k=r.statut==='attente'?'attente':r.statut==='confirme'?'ok':'non';
+    const l=r.statut==='attente'?'En attente':r.statut==='confirme'?'Confirmé':'Refusé';
+    return `<div class="card" style="cursor:default">
+      <div class="row"><div class="nm">${esc(p?.nom||'Prestation')}</div><span class="pill ${k}">${l}</span></div>
+      <div class="meta">${libDate(r.jour)} · ${r.heure}</div>
+      <div class="meta">${r.mode_paiement==='place'?'Paiement sur place':'Acompte — '+r.mode_paiement}</div>
+    </div>`;}).join('')+
+    `<button class="btn ghost" id="deconnexion">Se déconnecter</button>`;
+}
+
+function blocCarte(){
+  return `<a class="map" href="${ITINERAIRE}" target="_blank" rel="noreferrer">
+    <svg class="plan" viewBox="0 0 400 200" preserveAspectRatio="xMidYMid slice">
+      <rect width="400" height="200" fill="#1C0E1B"/>
+      <path d="M0 0 L400 0 L400 34 Q300 52 190 40 Q80 28 0 46 Z" fill="#1B2A3E" opacity=".85"/>
+      <path d="M0 46 Q80 28 190 40 Q300 52 400 34" stroke="#3B5570" stroke-width="1.2" fill="none"/>
+      <g fill="#2A1528">
+        <rect x="24" y="70" width="86" height="42" rx="3"/><rect x="130" y="70" width="96" height="42" rx="3"/>
+        <rect x="246" y="70" width="80" height="42" rx="3"/><rect x="24" y="132" width="86" height="48" rx="3"/>
+        <rect x="130" y="132" width="96" height="48" rx="3"/><rect x="246" y="132" width="80" height="48" rx="3"/>
+        <rect x="346" y="70" width="60" height="110" rx="3"/>
+      </g>
+      <g stroke="#4A2340" stroke-width="7"><path d="M0 61 H400"/><path d="M0 122 H400"/>
+        <path d="M120 52 V200"/><path d="M236 52 V200"/><path d="M336 52 V200"/></g>
+      <path d="M0 122 H400" stroke="#E3B85F" stroke-width="3.4" opacity=".9"/>
+      <text x="14" y="117" fill="#E3B85F" font-size="9" letter-spacing="2.6" font-family="Outfit,sans-serif">RUE JULES FERRY</text>
+    </svg>
+    <span class="halo"></span><span class="pin"></span>
+    <span class="bar"><span class="adr">60 rue Jules Ferry<br>Dakar Plateau</span><span class="go">Itinéraire</span></span>
+  </a>`;
+}
+function blocContacts(){
+  return `<div class="social">
+      <a href="https://www.instagram.com/${INSTA}" target="_blank" rel="noreferrer">Instagram</a>
+      <a href="https://www.tiktok.com/@${TIKTOK}" target="_blank" rel="noreferrer">TikTok</a>
+    </div>
+    <div class="social">
+      <a href="https://wa.me/${WA}" target="_blank" rel="noreferrer">WhatsApp</a>
+      <a href="mailto:${EMAIL}">Email</a>
+      <a href="tel:+${WA}">Appeler</a>
+    </div>`;
+}
+function pageInstitut(){
+  return `<div class="stitle">Venir à l'institut</div>${blocCarte()}
+    <p class="hint" style="margin-top:10px">Touchez la carte pour l'itinéraire depuis votre position.</p>
+    <div class="stitle">L'institut</div>
+    <p class="hint">Espace esthétique au sein du Salon Podium. Rendez-vous obligatoire pour toutes les prestations.</p>
+    <div class="stitle">La joindre</div>${blocContacts()}
+    <p class="hint" style="margin-top:14px">${ADRESSE}<br>${WA_AFF} · ${EMAIL}</p>
+    ${S.user?'<button class="btn ghost" id="deconnexion">Se déconnecter</button>':''}`;
+}
+
+/* ---------- ESPACE MARIAME ---------- */
+function vueAdmin(){
+  let h='';
+  if(S.tab==='agenda')        h+=`<div class="body">${adminAgenda()}</div>`;
+  else if(S.tab==='demandes') h+=`<div class="body">${adminDemandes()}</div>`;
+  else if(S.tab==='dispos')   h+=`<div class="body">${adminDispos()}</div>`;
+  else if(S.tab==='clientes') h+=`<div class="body">${adminClientes()}</div>`;
+  else                        h+=`<div class="body">${adminTarifs()}</div>`;
+  const n=S.rdvs.filter(r=>r.statut==='attente').length;
+  h+=barre([['agenda','Agenda','cal'],['demandes',n?`Demandes ${n}`:'Demandes','cloche'],
+            ['dispos','Dispos','horloge'],['clientes','Clientes','coeur'],['tarifs','Tarifs','etiquette']]);
+  return h;
+}
+
+function adminAgenda(){
+  const conf=S.rdvs.filter(r=>r.statut==='confirme');
+  const att=S.rdvs.filter(r=>r.statut==='attente').length;
+  const ca=conf.reduce((s,r)=>s+(S.prestations.find(p=>p.id===r.prestation_id)?.prix_fcfa||0),0);
+  const duJour=conf.filter(r=>r.jour===S.jourAdmin).sort((a,b)=>a.heure.localeCompare(b.heure));
+  return `<div class="recap">
+      <div class="l"><span>Confirmés</span><span>${conf.length}</span></div>
+      <div class="l"><span>En attente</span><span>${att}</span></div>
+      <div class="l tot"><span>Chiffre attendu</span><span>${fcfa(ca)}</span></div>
+    </div>
+    <div class="stitle">Agenda</div><div class="strip">`+
+    JOURS_LISTE.slice(0,14).map(d=>{const s=iso(d),n=conf.filter(r=>r.jour===s).length;
+      return `<button class="day ${S.jourAdmin===s?'sel':''}" data-jadmin="${s}">
+        <div class="a">${JOURS[d.getDay()]}</div><div class="b">${d.getDate()}</div><div class="c">${n?n+' rdv':'—'}</div></button>`;
+    }).join('')+`</div>`+
+    (duJour.length?duJour.map(r=>{const p=S.prestations.find(x=>x.id===r.prestation_id);
+      return `<div class="card" style="cursor:default"><div class="row">
+        <div><div class="nm">${r.heure} · ${esc(p?.nom||'')}</div>
+        <div class="meta">${esc(r.client_nom)} · ${esc(r.client_tel)}</div></div>
+        <span class="pill ${r.mode_paiement!=='place'?'ok':''}">${r.mode_paiement==='place'?'Sur place':'Acompte'}</span>
+      </div></div>`;}).join('')
+     :`<div class="empty"><div class="disp">Journée libre</div><p>Aucun rendez-vous confirmé le ${libDate(S.jourAdmin)}.</p></div>`);
+}
+
+function adminDemandes(){
+  const att=S.rdvs.filter(r=>r.statut==='attente');
+  if(!att.length) return `<div class="stitle">Demandes</div>
+    <div class="empty"><div class="disp">Tout est à jour</div><p>Les nouvelles demandes arriveront ici.</p></div>`;
+  return `<div class="stitle">Demandes à traiter</div>`+att.map(r=>{
+    const p=S.prestations.find(x=>x.id===r.prestation_id);
+    return `<div class="card" style="cursor:default">
+      <div class="row"><div class="nm">${esc(p?.nom||'')}</div>
+        <span class="pill ${r.mode_paiement!=='place'?'ok':'attente'}">${r.mode_paiement==='place'?'Sur place':'Acompte'}</span></div>
+      <div class="meta">${libDate(r.jour)} · ${r.heure}</div>
+      <div class="meta">${esc(r.client_nom)} · ${esc(r.client_tel)}</div>
+      ${r.ref_transaction?`<div class="meta">Transaction : ${esc(r.ref_transaction)}</div>`:''}
+      <div class="row" style="margin-top:13px">
+        <button class="btn sm" data-conf="${r.id}">Confirmer</button>
+        <button class="btn sm rose" data-ref="${r.id}">Refuser</button>
+        <a class="btn sm ghost" href="https://wa.me/221${String(r.client_tel).replace(/\D/g,'').replace(/^221/,'')}" target="_blank">WhatsApp</a>
+      </div></div>`;}).join('');
+}
+
+function adminDispos(){
+  const o=ouverts(S.jourAdmin);
+  return `<div class="stitle">Mes disponibilités</div>
+    <p class="hint" style="margin-bottom:14px">Ouvrez ou fermez une journée, puis retirez les heures déjà prises. Les clientes ne voient que ce qui reste.</p>
+    <div class="strip">`+JOURS_LISTE.slice(0,14).map(d=>{const s=iso(d);
+      return `<button class="day ${S.jourAdmin===s?'sel':''}" data-jadmin="${s}">
+        <div class="a">${JOURS[d.getDay()]}</div><div class="b">${d.getDate()}</div>
+        <div class="c">${ouverts(s).length?ouverts(s).length+'h':'fermé'}</div></button>`;}).join('')+
+    `</div><div class="row" style="margin:4px 0 14px">
+      <span class="hint">${libDate(S.jourAdmin)}</span>
+      <button class="btn sm ghost" id="togglejour">${o.length?'Fermer la journée':'Ouvrir la journée'}</button>
+    </div><div class="slots">`+
+    TOUS_CRENEAUX.map(h=>`<button class="slot ${o.includes(h)?'sel':''}" data-cr="${h}">${h}</button>`).join('')+`</div>`;
+}
+
+function adminClientes(){
+  if(!S.clientes.length) return `<div class="stitle">Fichier clientes</div>
+    <div class="empty"><div class="disp">Fichier vide</div><p>Chaque cliente qui crée un compte apparaît ici.</p></div>`;
+  return `<div class="stitle">Fichier clientes</div>`+S.clientes.map(c=>{
+    const n=S.rdvs.filter(r=>r.client_id===c.id).length;
+    const tel=String(c.tel||'').replace(/\D/g,'').replace(/^221/,'');
+    return `<div class="card" style="cursor:default"><div class="row">
+      <div><div class="nm">${esc(c.nom||'Sans nom')}</div>
+      <div class="meta">${esc(c.tel||'—')}${c.email?' · '+esc(c.email):''}</div>
+      <div class="meta">${n} rendez-vous</div></div>
+      ${tel?`<a class="btn sm ghost" href="https://wa.me/221${tel}" target="_blank">WhatsApp</a>`:''}
+    </div></div>`;}).join('')+
+    `<button class="btn ghost" id="deconnexion">Se déconnecter</button>`;
+}
+
+function adminTarifs(){
+  return `<div class="stitle">Prestations et tarifs</div>
+    <p class="hint" style="margin-bottom:12px">Touchez une ligne pour corriger le prix et la durée. Les modifications sont enregistrées dans la base.</p>`+
+    CATS.map(c=>`<div class="stitle">${c.nom}</div>`+
+      S.prestations.filter(p=>p.categorie===c.id).map(p=>`
+      <div class="card" data-edit="${p.id}">
+        <span class="prix">${fcfa(p.prix_fcfa)||'sur devis'}</span>
+        <div class="nm">${esc(p.nom)}</div>
+        <div class="meta">${p.duree_min?p.duree_min+' min':'durée variable'}</div>
+        ${S.edit===p.id?`<div style="margin-top:14px" data-stop="1">
+          <div class="field"><label>Prix en FCFA</label><input id="e_prix" inputmode="numeric" value="${p.prix_fcfa??''}" placeholder="ex. 5000"></div>
+          <div class="field"><label>Durée en minutes</label><input id="e_duree" inputmode="numeric" value="${p.duree_min??''}" placeholder="ex. 20"></div>
+          <button class="btn sm" data-save="${p.id}">Enregistrer</button>
+        </div>`:''}
+      </div>`).join('')).join('');
+}
+
+/* ---------- BARRE D'ONGLETS ---------- */
+const IC={
+  cal:'<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/>',
+  coeur:'<path d="M12 20s-7-4.4-7-9a4 4 0 017-2.6A4 4 0 0119 11c0 4.6-7 9-7 9z"/>',
+  lieu:'<path d="M12 21s7-5.6 7-11a7 7 0 10-14 0c0 5.4 7 11 7 11z"/><circle cx="12" cy="10" r="2.5"/>',
+  cloche:'<path d="M18 15V10a6 6 0 10-12 0v5l-2 3h16l-2-3z"/><path d="M10 21h4"/>',
+  horloge:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+  etiquette:'<path d="M3 12V5a2 2 0 012-2h7l9 9-9 9-9-9z"/><circle cx="8" cy="8" r="1.4"/>'
+};
+const barre = items => `<nav class="tabs">`+items.map(([k,l,i])=>
+  `<button class="${S.tab===k?'on':''}" data-tab="${k}"><svg viewBox="0 0 24 24">${IC[i]}</svg>${l}</button>`).join('')+`</nav>`;
+
+/* ============ INTERACTIONS ============ */
+function lire(id){ const e=document.getElementById(id); return e?e.value:''; }
+
+function brancher(){
+  document.querySelectorAll('[data-vue]').forEach(b=>b.onclick=()=>{
+    S.vue=b.dataset.vue; S.tab=S.vue==='admin'?'agenda':'reserver';
+    if(S.vue==='admin') chargerClientes().then(rendre); else rendre();
+  });
+  document.querySelectorAll('[data-tab]').forEach(b=>b.onclick=async()=>{
+    S.tab=b.dataset.tab;
     if(S.tab==='clientes') await chargerClientes();
     if(S.tab==='mesrdv'||S.tab==='agenda'||S.tab==='demandes') await chargerRdvs();
     rendre();
   });
 
+  // authentification
   const go=document.getElementById('a_go');
   if(go) go.onclick=authentifier;
   const bas=document.getElementById('a_bascule');
@@ -87,6 +600,7 @@ h1,h2,.disp{font-family:'Cormorant Garamond',Georgia,serif;font-weight:300;margi
   const dec=document.getElementById('deconnexion');
   if(dec) dec.onclick=async()=>{ await sb.auth.signOut(); S.profil=null; S.rdvs=[]; S.vue='client'; S.tab='reserver'; rendre(); };
 
+  // parcours de réservation
   document.querySelectorAll('[data-cat]').forEach(b=>b.onclick=()=>{S.cat=b.dataset.cat;rendre();});
   document.querySelectorAll('[data-presta]').forEach(b=>b.onclick=()=>{S.choix=b.dataset.presta;S.etape=1;rendre();});
   document.querySelectorAll('[data-jour]').forEach(b=>b.onclick=async()=>{
@@ -102,6 +616,7 @@ h1,h2,.disp{font-family:'Cormorant Garamond',Georgia,serif;font-weight:300;margi
   const val=document.getElementById('valider');
   if(val) val.onclick=reserver;
 
+  // administration
   document.querySelectorAll('[data-jadmin]').forEach(b=>b.onclick=()=>{S.jourAdmin=b.dataset.jadmin;rendre();});
   document.querySelectorAll('[data-conf]').forEach(b=>b.onclick=()=>statuer(b.dataset.conf,'confirme'));
   document.querySelectorAll('[data-ref]').forEach(b=>b.onclick=()=>statuer(b.dataset.ref,'refuse'));
