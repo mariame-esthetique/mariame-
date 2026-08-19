@@ -6,8 +6,45 @@
 <meta name="theme-color" content="#170B16">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Mariame">
-<title>Mariame · Esthétique — Salon Podium</title>
+<meta name="apple-mobile-web-app-title" content="Mariame A.">
+<title>Mariame A. — Esthéticienne à Dakar Plateau | Épilation au fil, Carbon Laser, soins</title>
+<meta name="description" content="Institut d'esthétique à Dakar Plateau : épilation au fil et à la cire, soins du visage, lipocavitation, Carbon Laser, tatouage et détatouage. Réservation en ligne, 60 rue Jules Ferry.">
+<link rel="apple-touch-icon" href="icon.png">
+<link rel="icon" href="icon.png">
+<meta property="og:title" content="Mariame A. — Esthéticienne à Dakar Plateau">
+<meta property="og:description" content="Épilation au fil, soins du visage, Carbon Laser. Prenez rendez-vous en ligne.">
+<meta property="og:image" content="icon-512.png">
+<meta property="og:type" content="website">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BeautySalon",
+  "name": "Mariame A. — Esthéticienne",
+  "description": "Institut d'esthétique à Dakar Plateau : épilation au fil, soins du visage, lipocavitation, Carbon Laser, tatouage et détatouage.",
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "60 rue Jules Ferry",
+    "addressLocality": "Dakar Plateau",
+    "addressCountry": "SN"
+  },
+  "telephone": "+221788242473",
+  "email": "mariameattieh1979@gmail.com",
+  "priceRange": "1500 - 35000 XOF",
+  "currenciesAccepted": "XOF",
+  "areaServed": "Dakar",
+  "sameAs": [
+    "https://www.instagram.com/mariame_salonpodium",
+    "https://www.tiktok.com/@mariame.salonpodium"
+  ],
+  "makesOffer": [
+    {"@type":"Offer","itemOffered":{"@type":"Service","name":"Épilation des sourcils au fil"}},
+    {"@type":"Offer","itemOffered":{"@type":"Service","name":"Soin du visage"}},
+    {"@type":"Offer","itemOffered":{"@type":"Service","name":"Carbon Laser"}},
+    {"@type":"Offer","itemOffered":{"@type":"Service","name":"Lipocavitation"}},
+    {"@type":"Offer","itemOffered":{"@type":"Service","name":"Détatouage"}}
+  ]
+}
+</script>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Italiana&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Outfit:wght@200;300;400;500&display=swap');
 
@@ -143,6 +180,27 @@ h1,h2,.disp{font-family:'Cormorant Garamond',Georgia,serif;font-weight:300;margi
 .wave-box{border:1px dashed var(--or);border-radius:14px;padding:16px;margin:4px 0 12px;text-align:center}
 .wave-box .num{font-family:'Cormorant Garamond',serif;font-size:27px;color:var(--or);letter-spacing:.04em;margin:6px 0}
 
+.qrbox{background:#FBF2E9;border-radius:18px;padding:20px;display:flex;justify-content:center;
+  border:1px solid var(--or)}
+.qrbox img,.qrbox canvas{display:block;max-width:100%;height:auto}
+.lien{font-size:12px;color:var(--or);text-align:center;margin:12px 0 4px;word-break:break-all;font-weight:300}
+.pretexte{background:rgba(255,255,255,.05);border:1px solid var(--ligne);border-radius:13px;
+  padding:14px;font-size:13.5px;line-height:1.6;font-weight:200;white-space:pre-wrap;color:var(--ivoire)}
+
+.intro{font-family:'Cormorant Garamond',serif;font-size:19px;line-height:1.5;font-weight:300;
+  color:var(--ivoire);margin:4px 0 20px;text-align:center}
+.etape{display:flex;gap:13px;align-items:flex-start;margin-bottom:14px;font-size:13.5px;
+  font-weight:200;line-height:1.55;color:var(--doux)}
+.etape b{color:var(--ivoire);font-weight:400}
+.etape .n{flex:0 0 auto;width:26px;height:26px;border-radius:50%;border:1px solid var(--or);
+  color:var(--or);display:grid;place-items:center;font-size:12px;font-family:'Cormorant Garamond',serif}
+
+.mono{width:86px;height:86px;margin:0 auto 10px;display:block;object-fit:contain;
+  filter:drop-shadow(0 3px 14px rgba(227,184,95,.35))}
+.galerie{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.galerie img{width:100%;height:130px;object-fit:cover;border-radius:14px;border:1px solid var(--ligne);display:block}
+.galerie .vide{display:none}
+
 .wa-ban{border:1px solid #25D366;border-radius:16px;padding:16px;margin-bottom:16px;background:rgba(37,211,102,.1)}
 .wa-ban .t{font-family:'Cormorant Garamond',serif;font-size:19px;font-style:italic;margin-bottom:4px}
 .wa-ban a{display:block;margin-top:12px;padding:14px;border-radius:12px;background:#25D366;color:#04310F;text-decoration:none;text-align:center;font-size:12px;font-weight:500;letter-spacing:.12em;text-transform:uppercase}
@@ -152,6 +210,7 @@ button:focus-visible,input:focus-visible,a:focus-visible{outline:2px solid var(-
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 .load{padding:70px 24px;text-align:center;color:var(--doux);font-size:13px;font-weight:200}
 </style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 </head>
 <body>
 <div id="app"><div class="load">Chargement…</div></div>
@@ -181,6 +240,7 @@ const EMAIL   = 'mariameattieh1979@gmail.com';
 const ADRESSE = '60 rue Jules Ferry, Dakar Plateau';
 const TIKTOK  = 'mariame.salonpodium';
 const INSTA   = 'mariame_salonpodium';
+const SITE    = 'https://mariame-esthetique.github.io/mariame-/';
 const ITINERAIRE = 'https://www.google.com/maps/dir/?api=1&destination='
   + encodeURIComponent('60 Rue Jules Ferry, Dakar, Sénégal') + '&travelmode=driving';
 
@@ -224,7 +284,8 @@ const S = {
   prestations:[], rdvs:[], dispos:{}, prisCache:{}, clientes:[],
   etape:0, cat:null, choix:null, jour:null, heure:null, moyen:'wave',
   form:{nom:'',tel:'',email:''}, ref:'', authMode:'connexion',
-  auth:{email:'',mdp:'',nom:'',tel:''}, jourAdmin:iso(new Date()), edit:null, busy:false, msgWA:null
+  auth:{email:'',mdp:'',nom:'',tel:''}, jourAdmin:iso(new Date()), edit:null, busy:false, msgWA:null,
+  tabPub:'accueil'
 };
 const JOURS_LISTE = prochains(21);
 
@@ -289,7 +350,7 @@ const app=document.getElementById('app');
 function rendre(){
   if(!S.pret){app.innerHTML='<div class="load">Chargement…</div>';return;}
   let h = entete();
-  if(!S.user){ h += ecranAuth(); }
+  if(!S.user){ h += vuePublique(); }
   else if(S.vue==='admin' && estAdmin()){ h += vueAdmin(); }
   else { h += vueCliente(); }
   app.innerHTML=h;
@@ -298,9 +359,10 @@ function rendre(){
 
 function entete(){
   let h=`<div class="hero">
-    <div class="calli">Mariame</div>
+    <img class="mono" src="logo.png" alt="Mariame A." onerror="this.style.display='none'">
+    <div class="calli">Mariame A.</div>
     <div class="flour">· · ·</div>
-    <div class="lieu">Salon Podium — Dakar Plateau</div>
+    <div class="lieu">Esthéticienne — Dakar Plateau</div>
     <div class="tag">Le soin, l'éclat et le détail</div>
   </div>`;
   if(S.user && estAdmin()){
@@ -310,6 +372,65 @@ function entete(){
     </div>`;
   }
   return h;
+}
+
+/* ---------- VITRINE PUBLIQUE ---------- */
+function vuePublique(){
+  let h='';
+  if(S.tabPub==='accueil')       h+=`<div class="body">${pageAccueil()}</div>`;
+  else if(S.tabPub==='soins')    h+=`<div class="body">${pageSoins()}</div>`;
+  else if(S.tabPub==='institut') h+=`<div class="body">${pageInstitut()}</div>`;
+  else                           h+=ecranAuth();
+  h+=`<nav class="tabs">`+[['accueil','Accueil','coeur'],['soins','Prestations','etiquette'],
+      ['institut','Institut','lieu'],['compte','Réserver','cal']].map(([k,l,i])=>
+    `<button class="${S.tabPub===k?'on':''}" data-tabpub="${k}"><svg viewBox="0 0 24 24">${IC[i]}</svg>${l}</button>`
+  ).join('')+`</nav>`;
+  return h;
+}
+
+function pageAccueil(){
+  const photos=[1,2,3,4].map(n=>
+    `<img src="photo-${n}.jpg" alt="Réalisation de Mariame" loading="lazy" onerror="this.classList.add('vide')">`).join('');
+  return `
+  <p class="intro">Épilation au fil, soins du visage, Carbon Laser, lipocavitation, tatouage et détatouage —
+  au cœur de Dakar Plateau, au sein du Salon Podium.</p>
+
+  <button class="btn" data-tabpub="compte">Prendre rendez-vous</button>
+  <a class="btn ghost" style="display:block;text-decoration:none;line-height:1.2"
+     href="https://wa.me/${WA}" target="_blank" rel="noreferrer">Écrire sur WhatsApp</a>
+
+  <div class="stitle">Ses spécialités</div>
+  ${CATS.map(c=>`<button class="tile" data-tabpub="soins"><div class="img ${c.cls}"></div>
+     <div class="cap"><div class="t">${c.nom}</div><div class="s">${c.sous}</div></div></button>`).join('')}
+
+  <div class="stitle">Ses réalisations</div>
+  <div class="galerie">${photos}</div>
+
+  <div class="stitle">Installer l'application</div>
+  <div class="etape"><span class="n">1</span><div>Sur <b>iPhone</b> : touchez l'icône <b>Partager</b> en bas de Safari,
+    puis <b>Sur l'écran d'accueil</b>.<br>Sur <b>Android</b> : menu <b>⋮</b> de Chrome, puis <b>Installer l'application</b>.</div></div>
+  <div class="etape"><span class="n">2</span><div>L'icône dorée apparaît sur votre téléphone, comme une vraie application.</div></div>
+  <div class="etape"><span class="n">3</span><div>Créez votre compte, choisissez votre soin et votre créneau. C'est réservé.</div></div>
+
+  <div class="stitle">La joindre</div>
+  ${blocContacts()}
+  <p class="hint" style="margin-top:14px">${ADRESSE}<br>${WA_AFF} · ${EMAIL}</p>`;
+}
+
+function pageSoins(){
+  return `<div class="stitle">Prestations et tarifs</div>
+  <p class="hint" style="margin-bottom:6px">Rendez-vous obligatoire pour toutes les prestations.</p>`+
+  CATS.map(c=>{
+    const l=S.prestations.filter(p=>p.categorie===c.id);
+    if(!l.length) return '';
+    return `<div class="stitle">${c.nom}</div>`+l.map(p=>
+      `<div class="card" style="cursor:default">
+        <span class="prix">${fcfa(p.prix_fcfa)||'sur devis'}</span>
+        <div class="nm">${esc(p.nom)}</div>
+        <div class="meta">${p.duree_min?p.duree_min+' minutes':'durée selon le projet'}</div>
+      </div>`).join('');
+  }).join('')+
+  `<button class="btn" data-tabpub="compte">Réserver un soin</button>`;
 }
 
 /* ---------- AUTHENTIFICATION ---------- */
@@ -466,7 +587,12 @@ function blocContacts(){
     </div>`;
 }
 function pageInstitut(){
-  return `<div class="stitle">Venir à l'institut</div>${blocCarte()}
+  const photos = [1,2,3,4,5,6].map(n=>
+    `<img src="photo-${n}.jpg" alt="Réalisation de Mariame" loading="lazy"
+      onerror="this.classList.add('vide')">`).join('');
+  return `<div class="stitle">Ses réalisations</div>
+    <div class="galerie">${photos}</div>
+    <div class="stitle">Venir à l'institut</div>${blocCarte()}
     <p class="hint" style="margin-top:10px">Touchez la carte pour l'itinéraire depuis votre position.</p>
     <div class="stitle">L'institut</div>
     <p class="hint">Espace esthétique au sein du Salon Podium. Rendez-vous obligatoire pour toutes les prestations.</p>
@@ -492,11 +618,37 @@ function vueAdmin(){
   else if(S.tab==='demandes') h+=`<div class="body">${banniereWA()}${adminDemandes()}</div>`;
   else if(S.tab==='dispos')   h+=`<div class="body">${adminDispos()}</div>`;
   else if(S.tab==='clientes') h+=`<div class="body">${adminClientes()}</div>`;
-  else                        h+=`<div class="body">${adminTarifs()}</div>`;
+  else if(S.tab==='tarifs')   h+=`<div class="body">${adminTarifs()}</div>`;
+  else                        h+=`<div class="body">${adminPartage()}</div>`;
   const n=S.rdvs.filter(r=>r.statut==='attente').length;
   h+=barre([['agenda','Agenda','cal'],['demandes',n?`Demandes ${n}`:'Demandes','cloche'],
-            ['dispos','Dispos','horloge'],['clientes','Clientes','coeur'],['tarifs','Tarifs','etiquette']]);
+            ['dispos','Dispos','horloge'],['clientes','Clientes','coeur'],
+            ['tarifs','Tarifs','etiquette'],['partage','Partage','lieu']]);
   return h;
+}
+
+function adminPartage(){
+  const bio = `Esthéticienne — Dakar Plateau\nÉpilation au fil · Soins du visage · Carbon Laser\nRéservez en ligne 👇`;
+  const story = `Mes rendez-vous se prennent maintenant en ligne ✨\n\nVous choisissez votre soin, votre jour et votre heure, à toute heure du jour ou de la nuit. Plus besoin d'attendre ma réponse.\n\nLien dans ma bio, ou enregistrez l'application sur votre téléphone : ${SITE}`;
+  const wa = `Bonjour ✨ Vous pouvez désormais prendre rendez-vous en ligne, quand vous voulez :\n${SITE}\n\nVous y verrez mes disponibilités en direct et tous mes tarifs. À très vite ! Mariame`;
+  return `<div class="stitle">Son QR code</div>
+  <p class="hint" style="margin-bottom:14px">Faites-en une capture d'écran, imprimez-la et posez-la sur le comptoir. Les clientes scannent en partant et prennent leur prochain rendez-vous seules.</p>
+  <div class="qrbox"><div id="qr"></div></div>
+  <div class="lien">${SITE}</div>
+  <button class="btn ghost" data-copie="${esc(SITE)}">Copier le lien</button>
+
+  <div class="stitle">Texte pour la bio Instagram</div>
+  <div class="pretexte">${esc(bio)}</div>
+  <button class="btn ghost" data-copie="${esc(bio)}">Copier</button>
+
+  <div class="stitle">Texte pour une story ou un post</div>
+  <div class="pretexte">${esc(story)}</div>
+  <button class="btn ghost" data-copie="${esc(story)}">Copier</button>
+
+  <div class="stitle">Message pour ses clientes</div>
+  <div class="pretexte">${esc(wa)}</div>
+  <button class="btn ghost" data-copie="${esc(wa)}">Copier</button>
+  <p class="hint" style="margin-top:14px">À envoyer en statut WhatsApp ou directement aux clientes fidèles. C'est de loin ce qui fonctionne le mieux au début.</p>`;
 }
 
 function adminAgenda(){
@@ -610,6 +762,20 @@ const barre = items => `<nav class="tabs">`+items.map(([k,l,i])=>
 function lire(id){ const e=document.getElementById(id); return e?e.value:''; }
 
 function brancher(){
+  document.querySelectorAll('[data-copie]').forEach(b=>b.onclick=async()=>{
+    try{ await navigator.clipboard.writeText(b.dataset.copie); toast('Copié'); }
+    catch(e){ toast('Sélectionnez le texte pour le copier',true); }
+  });
+  const qr=document.getElementById('qr');
+  if(qr && window.QRCode){
+    qr.innerHTML='';
+    new QRCode(qr,{text:SITE,width:220,height:220,
+      colorDark:'#2A1226',colorLight:'#FBF2E9',correctLevel:QRCode.CorrectLevel.M});
+  }
+
+  document.querySelectorAll('[data-tabpub]').forEach(b=>b.onclick=()=>{
+    S.tabPub=b.dataset.tabpub; window.scrollTo(0,0); rendre();
+  });
   document.querySelectorAll('[data-vue]').forEach(b=>b.onclick=()=>{
     S.vue=b.dataset.vue; S.tab=S.vue==='admin'?'agenda':'reserver';
     if(S.vue==='admin') chargerClientes().then(rendre); else rendre();
