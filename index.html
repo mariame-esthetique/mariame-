@@ -178,8 +178,6 @@ h1,h2,.disp{font-family:'Cormorant Garamond',Georgia,serif;font-weight:300;margi
 .tgl.on{background:linear-gradient(140deg,var(--or-clair),var(--or));border-color:var(--or)}
 .tgl.on::after{left:21px;background:#2A1206}
 
-.wave-box{border:1px dashed var(--or);border-radius:14px;padding:16px;margin:4px 0 12px;text-align:center}
-.wave-box .num{font-family:'Cormorant Garamond',serif;font-size:27px;color:var(--or);letter-spacing:.04em;margin:6px 0}
 
 .chips{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:11px}
 .chip{padding:8px 14px;border-radius:999px;border:1px solid var(--ligne);background:rgba(255,255,255,.05);
@@ -278,12 +276,6 @@ const CATS = [
   {id:'cire', nom:'Cire & pince',          sous:'Aisselles, maillot, jambes',           cls:'g-cire'},
   {id:'soin', nom:'Soins & technologies',  sous:'Visage, lipocavitation, Carbon Laser', cls:'g-soin'},
   {id:'encre',nom:'Encre',                 sous:'Tatouage & détatouage',                cls:'g-encre'},
-];
-const MOYENS = [
-  {id:'wave', nom:'Wave',           desc:'Acompte par Wave',        cls:'l-wave', court:'wave'},
-  {id:'om',   nom:'Orange Money',   desc:'Acompte par OM',          cls:'l-om',   court:'OM'},
-  {id:'free', nom:'Free Money',     desc:'Acompte par Free Money',  cls:'l-free', court:'Free'},
-  {id:'place',nom:'Régler sur place',desc:'Le jour du rendez-vous', cls:'l-place',court:'★'},
 ];
 
 /* ============ ÉTAT ============ */
@@ -471,7 +463,7 @@ function vueCliente(){
 }
 
 function rampe(){
-  const et=['Soin','Jour','Heure','Payer'];
+  const et=['Soin','Jour','Heure','Confirmer'];
   return `<div class="rampe">${et.map((e,i)=>
     (i>0?'<div class="rail"></div>':'')+
     `<div class="bw"><div class="bulb ${i<=S.etape?'on':''}"></div><div class="blbl ${i<=S.etape?'on':''}">${e}</div></div>`
@@ -516,29 +508,17 @@ function etapeReserver(){
       <button class="btn ghost" data-retour="1">Changer de jour</button>`;
   }
   const p=S.prestations.find(x=>x.id===S.choix)||{};
-  const acompte = p.prix_fcfa ? Math.max(2000, Math.round(p.prix_fcfa*0.3/500)*500) : 5000;
-  const surPlace = S.moyen==='place';
   return `
   <div class="recap">
     <div class="l"><span>Soin</span><span>${esc(p.nom)}</span></div>
-    <div class="l"><span>Quand</span><span>${libDate(S.jour)} · ${S.heure}</span></div>
-    <div class="l"><span>Durée</span><span>${p.duree_min?p.duree_min+' min':'à définir'}</span></div>
-    <div class="l tot"><span>${surPlace?'À régler sur place':'Acompte'}</span><span>${surPlace?(fcfa(p.prix_fcfa)||'sur devis'):fcfa(acompte)}</span></div>
+    <div class="l"><span>Quand</span><span>${libDate(S.jour)} \u00b7 ${S.heure}</span></div>
+    <div class="l"><span>Dur\u00e9e</span><span>${p.duree_min?p.duree_min+' min':'\u00e0 d\u00e9finir'}</span></div>
+    <div class="l tot"><span>\u00c0 r\u00e9gler sur place</span><span>${fcfa(p.prix_fcfa)||'sur devis'}</span></div>
   </div>
-  <div class="stitle">Vos coordonnées</div>
-  <div class="field"><label>Nom et prénom</label><input id="f_nom" value="${esc(S.form.nom)}" placeholder="Votre nom"></div>
-  <div class="field"><label>Téléphone (WhatsApp)</label><input id="f_tel" inputmode="tel" value="${esc(S.form.tel)}" placeholder="77 000 00 00"></div>
-  <div class="stitle">Paiement</div>
-  ${MOYENS.map(m=>`<button class="card ${S.moyen===m.id?'sel':''}" data-moyen="${m.id}">
-      <div class="pay"><div class="logo ${m.cls}">${m.court}</div>
-      <div><div class="nm">${m.nom}</div><div class="meta">${m.desc}</div></div></div></button>`).join('')}
-  ${surPlace?`<p class="hint">Le créneau reste en attente jusqu'à confirmation par Mariame.</p>`:`
-    <div class="wave-box">
-      <div class="hint">Envoyez ${fcfa(acompte)} au numéro</div>
-      <div class="num">${WA_AFF}</div>
-      <div class="hint">puis recopiez le numéro de transaction reçu par SMS</div>
-    </div>
-    <div class="field"><label>Numéro de transaction</label><input id="f_ref" value="${esc(S.ref)}" placeholder="ex. TXN12345678"></div>`}
+  <div class="stitle">Vos coordonn\u00e9es</div>
+  <div class="field"><label>Nom et pr\u00e9nom</label><input id="f_nom" value="${esc(S.form.nom)}" placeholder="Votre nom"></div>
+  <div class="field"><label>T\u00e9l\u00e9phone (WhatsApp)</label><input id="f_tel" inputmode="tel" value="${esc(S.form.tel)}" placeholder="77 000 00 00"></div>
+  <p class="hint">Le r\u00e8glement se fait \u00e0 l'institut le jour du rendez-vous \u2014 esp\u00e8ces, Wave ou Orange Money sur place. Votre demande reste en attente jusqu'\u00e0 la confirmation de Mariame.</p>
   <button class="btn" id="valider" ${S.busy?'disabled':''}>${S.busy?'Envoi…':'Demander ce rendez-vous'}</button>
   <button class="btn ghost" data-retour="2">Retour</button>`;
 }
@@ -554,7 +534,6 @@ function mesRdv(){
     return `<div class="card" style="cursor:default">
       <div class="row"><div class="nm">${esc(p?.nom||'Prestation')}</div><span class="pill ${k}">${l}</span></div>
       <div class="meta">${libDate(r.jour)} · ${r.heure}</div>
-      <div class="meta">${r.mode_paiement==='place'?'Paiement sur place':'Acompte — '+r.mode_paiement}</div>
       ${actif?`<div class="row" style="margin-top:11px">
         <button class="btn sm rose" data-annule="${r.id}">Annuler</button>
       </div>`:''}
@@ -679,7 +658,6 @@ function adminAgenda(){
       return `<div class="card" style="cursor:default"><div class="row">
         <div><div class="nm">${r.heure} · ${esc(p?.nom||'')}</div>
         <div class="meta">${esc(r.client_nom)} · ${esc(r.client_tel)}</div></div>
-        <span class="pill ${r.mode_paiement!=='place'?'ok':''}">${r.mode_paiement==='place'?'Sur place':'Acompte'}</span>
       </div>
       <div class="row" style="margin-top:11px">
         <a class="btn sm ghost" href="${rappel}" target="_blank" rel="noreferrer">Envoyer un rappel</a>
@@ -696,10 +674,9 @@ function adminDemandes(){
     const p=S.prestations.find(x=>x.id===r.prestation_id);
     return `<div class="card" style="cursor:default">
       <div class="row"><div class="nm">${esc(p?.nom||'')}</div>
-        <span class="pill ${r.mode_paiement!=='place'?'ok':'attente'}">${r.mode_paiement==='place'?'Sur place':'Acompte'}</span></div>
+        </div>
       <div class="meta">${libDate(r.jour)} · ${r.heure}</div>
       <div class="meta">${esc(r.client_nom)} · ${esc(r.client_tel)}</div>
-      ${r.ref_transaction?`<div class="meta">Transaction : ${esc(r.ref_transaction)}</div>`:''}
       <div class="row" style="margin-top:13px">
         <button class="btn sm" data-conf="${r.id}">Confirmer</button>
         <button class="btn sm rose" data-ref="${r.id}">Refuser</button>
@@ -886,7 +863,6 @@ function brancher(){
     S.jour=b.dataset.jour; S.heure=null; await chargerPris(S.jour); S.etape=2; rendre();
   });
   document.querySelectorAll('[data-heure]').forEach(b=>b.onclick=()=>{S.heure=b.dataset.heure;S.etape=3;rendre();});
-  document.querySelectorAll('[data-moyen]').forEach(b=>b.onclick=()=>{memoForm();S.moyen=b.dataset.moyen;rendre();});
   document.querySelectorAll('[data-retour]').forEach(b=>b.onclick=()=>{
     const v=b.dataset.retour;
     if(v==='cat'){S.cat=null;} else {S.etape=Number(v);}
@@ -917,8 +893,8 @@ function memoAuth(){
           nom:lire('a_nom')||S.auth.nom, tel:lire('a_tel')||S.auth.tel};
 }
 function memoForm(){
-  const n=lire('f_nom'), t=lire('f_tel'), r=lire('f_ref');
-  if(n!=='')S.form.nom=n; if(t!=='')S.form.tel=t; if(r!=='')S.ref=r;
+  const n=lire('f_nom'), t=lire('f_tel');
+  if(n!=='')S.form.nom=n; if(t!=='')S.form.tel=t;
 }
 
 async function authentifier(){
@@ -949,12 +925,11 @@ function traduire(m){
 async function reserver(){
   memoForm();
   if(!S.form.nom||!S.form.tel) return toast('Nom et téléphone requis',true);
-  if(S.moyen!=='place' && !S.ref) return toast('Numéro de transaction requis',true);
   S.busy=true; rendre();
   const {error}=await sb.from('rendez_vous').insert({
     client_id:S.user.id, prestation_id:S.choix, jour:S.jour, heure:S.heure,
     client_nom:S.form.nom, client_tel:S.form.tel, client_email:S.user.email,
-    mode_paiement:S.moyen, ref_transaction:S.moyen==='place'?null:S.ref, statut:'attente'
+    mode_paiement:'place', ref_transaction:null, statut:'attente'
   });
   S.busy=false;
   if(error){
@@ -963,7 +938,7 @@ async function reserver(){
   }
   await sb.from('profils').update({nom:S.form.nom,tel:S.form.tel}).eq('id',S.user.id);
   const pr=S.prestations.find(x=>x.id===S.choix);
-  const detail=`Bonjour Mariame, je viens de réserver « ${pr?pr.nom:''} » le ${libDate(S.jour)} à ${S.heure}. ${S.moyen==='place'?'Je réglerai sur place.':'J\'ai envoyé l\'acompte, référence '+S.ref+'.'} ${S.form.nom}`;
+  const detail=`Bonjour Mariame, je viens de r\u00e9server \u00ab ${pr?pr.nom:''} \u00bb le ${libDate(S.jour)} \u00e0 ${S.heure}. Je r\u00e9glerai sur place. ${S.form.nom}`;
   S.msgWA={lien:waLien(WA,detail), nom:'Mariame', titre:'Prévenir Mariame'};
   await chargerRdvs(); await chargerProfil();
   S.etape=0;S.cat=null;S.choix=null;S.jour=null;S.heure=null;S.ref='';S.tab='mesrdv';
