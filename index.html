@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#170B16">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Mariame">
+<title>Mariame · Esthétique — Salon Podium</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='14' fill='%23170B16'/><text x='32' y='44' font-size='34' text-anchor='middle' fill='%23E3B85F' font-family='Georgia,serif'>M</text></svg>">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Italiana&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Outfit:wght@200;300;400;500&display=swap');
+
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0}
+body{
+  --nuit:#170B16; --ligne:#4A2340; --or:#E3B85F; --or-clair:#F6DFA6;
+  --rose:#E08A9B; --ivoire:#FBF2E9; --doux:#B79FB2;
+  font-family:'Outfit',system-ui,sans-serif; color:var(--ivoire);
+  background:
+    radial-gradient(1000px 520px at 12% -8%, #5A1E42 0%, transparent 62%),
+    radial-gradient(760px 420px at 100% 4%, #7A2A3C 0%, transparent 58%),
+    radial-gradient(700px 700px at 50% 108%, #2E1140 0%, transparent 60%),
+    var(--nuit);
+  background-attachment:fixed; min-height:100vh;
+}
+#app{max-width:440px;margin:0 auto;min-height:100vh;padding-bottom:100px;position:relative;overflow-x:hidden}
+h1,h2,.disp{font-family:'Cormorant Garamond',Georgia,serif;font-weight:300;margin:0}
+.calli{font-family:'Italiana',serif;letter-spacing:.06em}
+
+.hero{padding:calc(26px + env(safe-area-inset-top)) 22px 20px;text-align:center;position:relative}
+.hero::before{content:'';position:absolute;inset:14px 18px auto;height:1px;background:linear-gradient(90deg,transparent,var(--or),transparent);opacity:.55}
+.hero .calli{font-size:38px;line-height:1}
+.hero .flour{color:var(--or);font-size:14px;letter-spacing:.5em;margin:11px 0 9px}
+.hero .lieu{font-size:10px;letter-spacing:.3em;text-transform:uppercase;color:var(--or)}
+.hero .tag{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:16px;color:var(--doux);margin-top:8px}
+
+.switch{display:flex;gap:4px;padding:4px;margin:4px 22px 0;background:rgba(255,255,255,.05);border:1px solid var(--ligne);border-radius:999px}
+.switch button{flex:1;border:0;background:transparent;color:var(--doux);font-family:inherit;font-size:11px;letter-spacing:.14em;text-transform:uppercase;padding:10px 0;border-radius:999px;cursor:pointer;transition:.2s}
+.switch button.on{background:linear-gradient(140deg,var(--or-clair),var(--or));color:#2A1206;font-weight:500}
+
+.rampe{display:flex;align-items:center;justify-content:center;padding:20px 22px 4px}
+.bw{display:flex;flex-direction:column;align-items:center;gap:8px;flex:1}
+.bulb{width:12px;height:12px;border-radius:50%;background:#43244050;border:1px solid var(--ligne);transition:.5s}
+.bulb.on{background:var(--or-clair);border-color:var(--or-clair);box-shadow:0 0 9px 2px rgba(227,184,95,.6),0 0 26px 8px rgba(227,184,95,.22)}
+.blbl{font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--doux)}
+.blbl.on{color:var(--ivoire)}
+.rail{flex:0 0 16px;height:1px;background:var(--ligne);margin-bottom:17px}
+
+.body{padding:14px 22px 26px}
+.stitle{font-family:'Cormorant Garamond',serif;font-size:20px;font-style:italic;margin:24px 0 12px;display:flex;align-items:center;gap:12px}
+.stitle::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,var(--ligne),transparent)}
+.stitle:first-child{margin-top:6px}
+
+.tile{position:relative;border-radius:18px;overflow:hidden;border:1px solid var(--ligne);margin-bottom:11px;cursor:pointer;width:100%;text-align:left;color:inherit;font-family:inherit;padding:0;display:block;transition:.22s;background:none}
+.tile:active{transform:scale(.99)}
+.tile .img{height:110px;position:relative}
+.tile .img::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,transparent 30%,rgba(23,11,22,.92) 100%)}
+.tile .cap{position:absolute;bottom:0;left:0;right:0;padding:14px 16px;z-index:2}
+.tile .cap .t{font-family:'Cormorant Garamond',serif;font-size:22px}
+.tile .cap .s{font-size:11px;color:var(--doux);margin-top:2px;font-weight:200}
+.g-fil{background:linear-gradient(135deg,#B8863B,#E3B85F 45%,#7A4A2B)}
+.g-cire{background:linear-gradient(135deg,#8E3B54,#E08A9B 48%,#5C2038)}
+.g-soin{background:linear-gradient(135deg,#2E5A63,#7FC4C9 46%,#1E3547)}
+.g-encre{background:linear-gradient(135deg,#3B2A5E,#8B6FC4 44%,#1C1230)}
+
+.card{background:linear-gradient(160deg,rgba(255,255,255,.06),rgba(255,255,255,.02));border:1px solid var(--ligne);border-radius:15px;padding:15px 16px;margin-bottom:9px;transition:.18s;text-align:left;width:100%;color:inherit;font-family:inherit;display:block;cursor:pointer}
+.card.sel{border-color:var(--or);background:linear-gradient(160deg,rgba(227,184,95,.16),rgba(227,184,95,.04))}
+.card .nm{font-size:15px;font-weight:300}
+.card .meta{font-size:11.5px;color:var(--doux);margin-top:4px;font-weight:200}
+.card .prix{float:right;font-family:'Cormorant Garamond',serif;font-size:17px;color:var(--or)}
+
+.strip{display:flex;gap:8px;overflow-x:auto;padding:2px 0 12px;-webkit-overflow-scrolling:touch}
+.strip::-webkit-scrollbar{display:none}
+.day{flex:0 0 auto;width:60px;padding:11px 0;border-radius:14px;background:rgba(255,255,
+    if(S.tab==='clientes') await chargerClientes();
+    if(S.tab==='mesrdv'||S.tab==='agenda'||S.tab==='demandes') await chargerRdvs();
+    rendre();
+  });
+
+  const go=document.getElementById('a_go');
+  if(go) go.onclick=authentifier;
+  const bas=document.getElementById('a_bascule');
+  if(bas) bas.onclick=()=>{ memoAuth(); S.authMode=S.authMode==='connexion'?'inscription':'connexion'; rendre(); };
+
+  const dec=document.getElementById('deconnexion');
+  if(dec) dec.onclick=async()=>{ await sb.auth.signOut(); S.profil=null; S.rdvs=[]; S.vue='client'; S.tab='reserver'; rendre(); };
+
+  document.querySelectorAll('[data-cat]').forEach(b=>b.onclick=()=>{S.cat=b.dataset.cat;rendre();});
+  document.querySelectorAll('[data-presta]').forEach(b=>b.onclick=()=>{S.choix=b.dataset.presta;S.etape=1;rendre();});
+  document.querySelectorAll('[data-jour]').forEach(b=>b.onclick=async()=>{
+    S.jour=b.dataset.jour; S.heure=null; await chargerPris(S.jour); S.etape=2; rendre();
+  });
+  document.querySelectorAll('[data-heure]').forEach(b=>b.onclick=()=>{S.heure=b.dataset.heure;S.etape=3;rendre();});
+  document.querySelectorAll('[data-moyen]').forEach(b=>b.onclick=()=>{memoForm();S.moyen=b.dataset.moyen;rendre();});
+  document.querySelectorAll('[data-retour]').forEach(b=>b.onclick=()=>{
+    const v=b.dataset.retour;
+    if(v==='cat'){S.cat=null;} else {S.etape=Number(v);}
+    rendre();
+  });
+  const val=document.getElementById('valider');
+  if(val) val.onclick=reserver;
+
+  document.querySelectorAll('[data-jadmin]').forEach(b=>b.onclick=()=>{S.jourAdmin=b.dataset.jadmin;rendre();});
+  document.querySelectorAll('[data-conf]').forEach(b=>b.onclick=()=>statuer(b.dataset.conf,'confirme'));
+  document.querySelectorAll('[data-ref]').forEach(b=>b.onclick=()=>statuer(b.dataset.ref,'refuse'));
+  const tj=document.getElementById('togglejour');
+  if(tj) tj.onclick=basculerJour;
+  document.querySelectorAll('[data-cr]').forEach(b=>b.onclick=()=>basculerCreneau(b.dataset.cr));
+  document.querySelectorAll('[data-edit]').forEach(b=>b.onclick=e=>{
+    if(e.target.closest('[data-stop]')) return;
+    S.edit = S.edit===b.dataset.edit ? null : b.dataset.edit; rendre();
+  });
+  document.querySelectorAll('[data-save]').forEach(b=>b.onclick=e=>{e.stopPropagation();sauverTarif(b.dataset.save);});
+}
+
+function memoAuth(){
+  S.auth={email:lire('a_email')||S.auth.email, mdp:lire('a_mdp')||S.auth.mdp,
+          nom:lire('a_nom')||S.auth.nom, tel:lire('a_tel')||S.auth.tel};
+}
+function memoForm(){
+  const n=lire('f_nom'), t=lire('f_tel'), r=lire('f_ref');
+  if(n!=='')S.form.nom=n; if(t!=='')S.form.tel=t; if(r!=='')S.ref=r;
+}
+
+async function authentifier(){
+  memoAuth();
+  const {email,mdp,nom,tel}=S.auth;
+  if(!email||!mdp) return toast('Email et mot de passe requis',true);
+  if(S.authMode==='inscription' && (!nom||!tel)) return toast('Nom et téléphone requis',true);
+  S.busy=true; rendre();
+  let error;
+  if(S.authMode==='connexion'){
+    ({error}=await sb.auth.signInWithPassword({email,password:mdp}));
+  } else {
+    ({error}=await sb.auth.signUp({email,password:mdp,options:{data:{nom,tel}}}));
+  }
+  S.busy=false;
+  if(error){ rendre(); return toast(traduire(error.message),true); }
+  S.auth={email:'',mdp:'',nom:'',tel:''};
+  toast(S.authMode==='connexion'?'Bienvenue':'Compte créé');
+}
+function traduire(m){
+  if(/Invalid login/i.test(m)) return 'Email ou mot de passe incorrect';
+  if(/already registered/i.test(m)) return 'Un compte existe déjà avec cet email';
+  if(/at least 6/i.test(m)) return 'Mot de passe : 6 caractères minimum';
+  if(/valid email/i.test(m)) return 'Adresse email invalide';
+  return m;
+}
+
+async function reserver(){
+  memoForm();
+  if(!S.form.nom||!S.form.tel) return toast('Nom et téléphone requis',true);
+  if(S.moyen!=='place' && !S.ref) return toast('Numéro de transaction requis',true);
+  S.busy=true; rendre();
+  const {error}=await sb.from('rendez_vous').insert({
+    client_id:S.user.id, prestation_id:S.choix, jour:S.jour, heure:S.heure,
+    client_nom:S.form.nom, client_tel:S.form.tel, client_email:S.user.email,
+    mode_paiement:S.moyen, ref_transaction:S.moyen==='place'?null:S.ref, statut:'attente'
+  });
+  S.busy=false;
+  if(error){
+    if(error.code==='23505'){ await chargerPris(S.jour); S.etape=2; rendre(); return toast('Ce créneau vient d\'être pris',true); }
+    rendre(); return toast('Erreur : '+error.message,true);
+  }
+  await sb.from('profils').update({nom:S.form.nom,tel:S.form.tel}).eq('id',S.user.id);
+  await chargerRdvs(); await chargerProfil();
+  S.etape=0;S.cat=null;S.choix=null;S.jour=null;S.heure=null;S.ref='';S.tab='mesrdv';
+  rendre(); toast('Demande envoyée à Mariame');
+}
+
+async function statuer(id,statut){
+  const {error}=await sb.from('rendez_vous').update({statut}).eq('id',id);
+  if(error) return toast('Erreur : '+error.message,true);
+  await chargerRdvs(); rendre();
+  toast(statut==='confirme'?'Rendez-vous confirmé':'Rendez-vous refusé');
+}
+
+async function basculerJour(){
+  const j=S.jourAdmin, a=ouverts(j);
+  const [y,m,d]=j.split('-').map(Number);
+  const def=creneauxDef(new Date(y,m-1,d));
+  const nouveaux = a.length ? [] : (def.length?def:TOUS_CRENEAUX);
+  const {error}=await sb.from('disponibilites').upsert({jour:j,creneaux:nouveaux});
+  if(error) return toast('Erreur : '+error.message,true);
+  S.dispos[j]=nouveaux; rendre();
+}
+async function basculerCreneau(h){
+  const j=S.jourAdmin, a=ouverts(j);
+  const n = a.includes(h) ? a.filter(x=>x!==h) : [...a,h].sort();
+  const {error}=await sb.from('disponibilites').upsert({jour:j,creneaux:n});
+  if(error) return toast('Erreur : '+error.message,true);
+  S.dispos[j]=n; rendre();
+}
+
+async function sauverTarif(id){
+  const prix=lire('e_prix'), duree=lire('e_duree');
+  const {error}=await sb.from('prestations').update({
+    prix_fcfa: prix===''?null:Number(prix),
+    duree_min: duree===''?null:Number(duree)
+  }).eq('id',id);
+  if(error) return toast('Erreur : '+error.message,true);
+  await chargerPrestations(); S.edit=null; rendre(); toast('Tarif enregistré');
+}
+
+initialiser();
+</script>
+</body>
+</html>
