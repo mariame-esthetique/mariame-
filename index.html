@@ -143,6 +143,11 @@ h1,h2,.disp{font-family:'Cormorant Garamond',Georgia,serif;font-weight:300;margi
 .wave-box{border:1px dashed var(--or);border-radius:14px;padding:16px;margin:4px 0 12px;text-align:center}
 .wave-box .num{font-family:'Cormorant Garamond',serif;font-size:27px;color:var(--or);letter-spacing:.04em;margin:6px 0}
 
+.wa-ban{border:1px solid #25D366;border-radius:16px;padding:16px;margin-bottom:16px;background:rgba(37,211,102,.1)}
+.wa-ban .t{font-family:'Cormorant Garamond',serif;font-size:19px;font-style:italic;margin-bottom:4px}
+.wa-ban a{display:block;margin-top:12px;padding:14px;border-radius:12px;background:#25D366;color:#04310F;text-decoration:none;text-align:center;font-size:12px;font-weight:500;letter-spacing:.12em;text-transform:uppercase}
+.wa-ban .x{float:right;color:var(--doux);font-size:20px;line-height:1;cursor:pointer;padding:0 4px}
+
 button:focus-visible,input:focus-visible,a:focus-visible{outline:2px solid var(--or);outline-offset:2px}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 .load{padding:70px 24px;text-align:center;color:var(--doux);font-size:13px;font-weight:200}
@@ -194,6 +199,12 @@ function libDate(s){ const [y,m,d]=s.split('-').map(Number); return `${JOURS[new
 const fcfa = n => (n==null||n==='') ? null : Number(n).toLocaleString('fr-FR').replace(/\u202f|\u00a0/g,' ') + ' F';
 const esc = s => String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 
+function waLien(tel, texte){
+  let n = String(tel||'').replace(/\D/g,'').replace(/^0+/,'');
+  if(!n.startsWith('221')) n = '221' + n;
+  return 'https://wa.me/' + n + '?text=' + encodeURIComponent(texte);
+}
+
 const CATS = [
   {id:'fil',  nom:'Épilation au fil',      sous:'Sourcils, lèvre, visage',              cls:'g-fil'},
   {id:'cire', nom:'Cire & pince',          sous:'Aisselles, maillot, jambes',           cls:'g-cire'},
@@ -213,7 +224,7 @@ const S = {
   prestations:[], rdvs:[], dispos:{}, prisCache:{}, clientes:[],
   etape:0, cat:null, choix:null, jour:null, heure:null, moyen:'wave',
   form:{nom:'',tel:'',email:''}, ref:'', authMode:'connexion',
-  auth:{email:'',mdp:'',nom:'',tel:''}, jourAdmin:iso(new Date()), edit:null, busy:false
+  auth:{email:'',mdp:'',nom:'',tel:''}, jourAdmin:iso(new Date()), edit:null, busy:false, msgWA:null
 };
 const JOURS_LISTE = prochains(21);
 
@@ -406,14 +417,18 @@ function etapeReserver(){
 function mesRdv(){
   if(!S.rdvs.length) return `<div class="stitle">Mes rendez-vous</div>
     <div class="empty"><div class="disp">Rien de prévu</div><p>Vos rendez-vous apparaîtront ici après votre première réservation.</p></div>`;
-  return `<div class="stitle">Mes rendez-vous</div>`+S.rdvs.map(r=>{
+  return banniereWA()+`<div class="stitle">Mes rendez-vous</div>`+S.rdvs.map(r=>{
     const p=S.prestations.find(x=>x.id===r.prestation_id);
     const k=r.statut==='attente'?'attente':r.statut==='confirme'?'ok':'non';
-    const l=r.statut==='attente'?'En attente':r.statut==='confirme'?'Confirmé':'Refusé';
+    const l=r.statut==='attente'?'En attente':r.statut==='confirme'?'Confirmé':r.statut==='annule'?'Annulé':'Refusé';
+    const actif = r.statut==='attente'||r.statut==='confirme';
     return `<div class="card" style="cursor:default">
       <div class="row"><div class="nm">${esc(p?.nom||'Prestation')}</div><span class="pill ${k}">${l}</span></div>
       <div class="meta">${libDate(r.jour)} · ${r.heure}</div>
       <div class="meta">${r.mode_paiement==='place'?'Paiement sur place':'Acompte — '+r.mode_paiement}</div>
+      ${actif?`<div class="row" style="margin-top:11px">
+        <button class="btn sm rose" data-annule="${r.id}">Annuler</button>
+      </div>`:''}
     </div>`;}).join('')+
     `<button class="btn ghost" id="deconnexion">Se déconnecter</button>`;
 }
@@ -461,10 +476,20 @@ function pageInstitut(){
 }
 
 /* ---------- ESPACE MARIAME ---------- */
+function banniereWA(){
+  if(!S.msgWA) return '';
+  return `<div class="wa-ban">
+    <span class="x" data-fermewa="1">×</span>
+    <div class="t">${esc(S.msgWA.titre)}</div>
+    <div class="hint">Le message est déjà rédigé, il ne reste qu'à l'envoyer à ${esc(S.msgWA.nom)}.</div>
+    <a href="${S.msgWA.lien}" target="_blank" rel="noreferrer">Ouvrir WhatsApp</a>
+  </div>`;
+}
+
 function vueAdmin(){
   let h='';
-  if(S.tab==='agenda')        h+=`<div class="body">${adminAgenda()}</div>`;
-  else if(S.tab==='demandes') h+=`<div class="body">${adminDemandes()}</div>`;
+  if(S.tab==='agenda')        h+=`<div class="body">${banniereWA()}${adminAgenda()}</div>`;
+  else if(S.tab==='demandes') h+=`<div class="body">${banniereWA()}${adminDemandes()}</div>`;
   else if(S.tab==='dispos')   h+=`<div class="body">${adminDispos()}</div>`;
   else if(S.tab==='clientes') h+=`<div class="body">${adminClientes()}</div>`;
   else                        h+=`<div class="body">${adminTarifs()}</div>`;
@@ -490,10 +515,15 @@ function adminAgenda(){
         <div class="a">${JOURS[d.getDay()]}</div><div class="b">${d.getDate()}</div><div class="c">${n?n+' rdv':'—'}</div></button>`;
     }).join('')+`</div>`+
     (duJour.length?duJour.map(r=>{const p=S.prestations.find(x=>x.id===r.prestation_id);
+      const rappel=waLien(r.client_tel,`Bonjour ${r.client_nom}, petit rappel : nous avons rendez-vous ${libDate(r.jour)} à ${r.heure} pour « ${p?p.nom:'votre soin'} ». À demain ! Mariame — Salon Podium`);
       return `<div class="card" style="cursor:default"><div class="row">
         <div><div class="nm">${r.heure} · ${esc(p?.nom||'')}</div>
         <div class="meta">${esc(r.client_nom)} · ${esc(r.client_tel)}</div></div>
         <span class="pill ${r.mode_paiement!=='place'?'ok':''}">${r.mode_paiement==='place'?'Sur place':'Acompte'}</span>
+      </div>
+      <div class="row" style="margin-top:11px">
+        <a class="btn sm ghost" href="${rappel}" target="_blank" rel="noreferrer">Envoyer un rappel</a>
+        <a class="btn sm ghost" href="tel:+221${String(r.client_tel).replace(/\D/g,'').replace(/^221/,'')}">Appeler</a>
       </div></div>`;}).join('')
      :`<div class="empty"><div class="disp">Journée libre</div><p>Aucun rendez-vous confirmé le ${libDate(S.jourAdmin)}.</p></div>`);
 }
@@ -616,6 +646,9 @@ function brancher(){
   const val=document.getElementById('valider');
   if(val) val.onclick=reserver;
 
+  document.querySelectorAll('[data-fermewa]').forEach(b=>b.onclick=()=>{S.msgWA=null;rendre();});
+  document.querySelectorAll('[data-annule]').forEach(b=>b.onclick=()=>annuler(b.dataset.annule));
+
   // administration
   document.querySelectorAll('[data-jadmin]').forEach(b=>b.onclick=()=>{S.jourAdmin=b.dataset.jadmin;rendre();});
   document.querySelectorAll('[data-conf]').forEach(b=>b.onclick=()=>statuer(b.dataset.conf,'confirme'));
@@ -680,14 +713,40 @@ async function reserver(){
     rendre(); return toast('Erreur : '+error.message,true);
   }
   await sb.from('profils').update({nom:S.form.nom,tel:S.form.tel}).eq('id',S.user.id);
+  const pr=S.prestations.find(x=>x.id===S.choix);
+  const detail=`Bonjour Mariame, je viens de réserver « ${pr?pr.nom:''} » le ${libDate(S.jour)} à ${S.heure}. ${S.moyen==='place'?'Je réglerai sur place.':'J\'ai envoyé l\'acompte, référence '+S.ref+'.'} ${S.form.nom}`;
+  S.msgWA={lien:waLien(WA,detail), nom:'Mariame', titre:'Prévenir Mariame'};
   await chargerRdvs(); await chargerProfil();
   S.etape=0;S.cat=null;S.choix=null;S.jour=null;S.heure=null;S.ref='';S.tab='mesrdv';
   rendre(); toast('Demande envoyée à Mariame');
 }
 
+async function annuler(id){
+  const r=S.rdvs.find(x=>x.id===id);
+  const {error}=await sb.from('rendez_vous').update({statut:'annule'}).eq('id',id);
+  if(error) return toast('Erreur : '+error.message,true);
+  if(r){
+    const p=S.prestations.find(x=>x.id===r.prestation_id);
+    const texte=`Bonjour Mariame, je dois annuler mon rendez-vous « ${p?p.nom:''} » du ${libDate(r.jour)} à ${r.heure}. Désolée pour le dérangement. ${r.client_nom}`;
+    S.msgWA={lien:waLien(WA,texte), nom:'Mariame', titre:'Prévenir Mariame de l\'annulation'};
+  }
+  await chargerRdvs(); rendre(); toast('Rendez-vous annulé');
+}
+
 async function statuer(id,statut){
+  const r=S.rdvs.find(x=>x.id===id);
   const {error}=await sb.from('rendez_vous').update({statut}).eq('id',id);
   if(error) return toast('Erreur : '+error.message,true);
+  if(r){
+    const p=S.prestations.find(x=>x.id===r.presta||x.id===r.prestation_id);
+    const soin=p?p.nom:'votre soin';
+    const quand=`${libDate(r.jour)} à ${r.heure}`;
+    const texte = statut==='confirme'
+      ? `Bonjour ${r.client_nom}, votre rendez-vous pour « ${soin} » le ${quand} est confirmé. Je vous attends au Salon Podium, 60 rue Jules Ferry, Dakar Plateau. À très vite ! Mariame`
+      : `Bonjour ${r.client_nom}, je ne peux malheureusement pas honorer le créneau du ${quand}. Dites-moi un autre moment qui vous arrange et je vous réserve une place. Mariame`;
+    S.msgWA={lien:waLien(r.client_tel,texte), nom:r.client_nom,
+             titre:statut==='confirme'?'Prévenir la cliente':'Proposer un autre créneau'};
+  }
   await chargerRdvs(); rendre();
   toast(statut==='confirme'?'Rendez-vous confirmé':'Rendez-vous refusé');
 }
