@@ -180,6 +180,13 @@ h1,h2,.disp{font-family:'Cormorant Garamond',Georgia,serif;font-weight:300;margi
 .wave-box{border:1px dashed var(--or);border-radius:14px;padding:16px;margin:4px 0 12px;text-align:center}
 .wave-box .num{font-family:'Cormorant Garamond',serif;font-size:27px;color:var(--or);letter-spacing:.04em;margin:6px 0}
 
+.chips{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:11px}
+.chip{padding:8px 14px;border-radius:999px;border:1px solid var(--ligne);background:rgba(255,255,255,.05);
+  color:var(--doux);font-family:inherit;font-size:11.5px;cursor:pointer;transition:.18s}
+.chip.on{background:linear-gradient(140deg,var(--or-clair),var(--or));border-color:var(--or);color:#2A1206;font-weight:500}
+.zone{width:100%;background:rgba(255,255,255,.05);border:1px solid var(--ligne);border-radius:13px;
+  padding:14px;color:var(--ivoire);font-family:inherit;font-size:14px;line-height:1.6;resize:vertical}
+
 .qrbox{background:#FBF2E9;border-radius:18px;padding:20px;display:flex;justify-content:center;
   border:1px solid var(--or)}
 .qrbox img,.qrbox canvas{display:block;max-width:100%;height:auto}
@@ -285,7 +292,7 @@ const S = {
   etape:0, cat:null, choix:null, jour:null, heure:null, moyen:'wave',
   form:{nom:'',tel:'',email:''}, ref:'', authMode:'connexion',
   auth:{email:'',mdp:'',nom:'',tel:''}, jourAdmin:iso(new Date()), edit:null, busy:false, msgWA:null,
-  tabPub:'accueil'
+  tabPub:'accueil', campagne:'promo', texteCampagne:null, envoyees:{}
 };
 const JOURS_LISTE = prochains(21);
 
@@ -714,19 +721,81 @@ function adminDispos(){
     TOUS_CRENEAUX.map(h=>`<button class="slot ${o.includes(h)?'sel':''}" data-cr="${h}">${h}</button>`).join('')+`</div>`;
 }
 
+const MODELES = {
+  promo:    {nom:'Offre',     texte:"Bonjour {nom} \u2728 Cette semaine je propose une offre sur les sourcils au fil. Voulez-vous que je vous garde un cr\u00e9neau ? Vous pouvez aussi choisir votre horaire ici :\n{lien}\nMariame"},
+  nouveau:  {nom:'Nouveaut\u00e9', texte:"Bonjour {nom} \u2728 Bonne nouvelle : le Carbon Laser est disponible \u00e0 l'institut. Un teint net et lumineux d\u00e8s la premi\u00e8re s\u00e9ance. R\u00e9servez ici :\n{lien}\nMariame"},
+  entretien:{nom:'Entretien', texte:"Bonjour {nom} \u2728 Il est bient\u00f4t temps de refaire vos sourcils pour garder une belle ligne. Choisissez votre cr\u00e9neau ici :\n{lien}\nMariame"},
+  appli:    {nom:'L\'appli',  texte:"Bonjour {nom} \u2728 Mes rendez-vous se prennent maintenant en ligne, \u00e0 toute heure. Vous voyez mes disponibilit\u00e9s en direct et tous mes tarifs :\n{lien}\nMariame"},
+};
+
 function adminClientes(){
-  if(!S.clientes.length) return `<div class="stitle">Fichier clientes</div>
-    <div class="empty"><div class="disp">Fichier vide</div><p>Chaque cliente qui crée un compte apparaît ici.</p></div>`;
-  return `<div class="stitle">Fichier clientes</div>`+S.clientes.map(c=>{
-    const n=S.rdvs.filter(r=>r.client_id===c.id).length;
-    const tel=String(c.tel||'').replace(/\D/g,'').replace(/^221/,'');
-    return `<div class="card" style="cursor:default"><div class="row">
-      <div><div class="nm">${esc(c.nom||'Sans nom')}</div>
-      <div class="meta">${esc(c.tel||'—')}${c.email?' · '+esc(c.email):''}</div>
-      <div class="meta">${n} rendez-vous</div></div>
-      ${tel?`<a class="btn sm ghost" href="https://wa.me/221${tel}" target="_blank">WhatsApp</a>`:''}
-    </div></div>`;}).join('')+
-    `<button class="btn ghost" id="deconnexion">Se déconnecter</button>`;
+  const auj=new Date();
+  const dem=iso(new Date(auj.getFullYear(),auj.getMonth(),auj.getDate()+1));
+  const demain=S.rdvs.filter(r=>r.jour===dem && r.statut==='confirme')
+                     .sort((a,b)=>a.heure.localeCompare(b.heure));
+
+  const derniere={};
+  S.rdvs.filter(r=>r.statut==='confirme').forEach(r=>{
+    if(!derniere[r.client_id] || r.jour>derniere[r.client_id]) derniere[r.client_id]=r.jour;
+  });
+  const limite=iso(new Date(auj.getFullYear(),auj.getMonth(),auj.getDate()-60));
+  const dormantes=S.clientes.filter(c=>c.role!=='admin' && c.tel && (!derniere[c.id] || derniere[c.id]<limite));
+
+  const modele = S.texteCampagne!==null ? S.texteCampagne : MODELES[S.campagne].texte;
+
+  let h=`<div class="stitle">Message du moment</div>
+  <p class="hint" style="margin-bottom:11px">Choisissez un message et modifiez-le si vous voulez. Il sera envoy\u00e9 aux clientes de la liste du bas, avec leur pr\u00e9nom et votre lien d\u00e9j\u00e0 dedans.</p>
+  <div class="chips">`+Object.keys(MODELES).map(k=>
+    `<button class="chip ${S.campagne===k?'on':''}" data-modele="${k}">${MODELES[k].nom}</button>`).join('')+
+  `</div>
+  <textarea id="t_campagne" class="zone" rows="7">${esc(modele)}</textarea>`;
+
+  h+=`<div class="stitle">\u00c0 rappeler pour demain</div>`;
+  if(!demain.length){
+    h+=`<p class="hint">Aucun rendez-vous confirm\u00e9 demain.</p>`;
+  } else {
+    h+=`<p class="hint" style="margin-bottom:12px">Un rappel la veille divise par deux les rendez-vous manqu\u00e9s.</p>`;
+    h+=demain.map(r=>{
+      const p=S.prestations.find(x=>x.id===r.prestation_id);
+      const t=waLien(r.client_tel,`Bonjour ${r.client_nom}, petit rappel : nous avons rendez-vous demain ${libDate(r.jour)} \u00e0 ${r.heure} pour \u00ab\u00a0${p?p.nom:'votre soin'}\u00a0\u00bb. Au Salon Podium, 60 rue Jules Ferry. \u00c0 demain ! Mariame`);
+      return `<div class="card" style="cursor:default"><div class="row">
+        <div><div class="nm">${r.heure} \u00b7 ${esc(r.client_nom)}</div>
+        <div class="meta">${esc(p?.nom||'')}</div></div>
+        <a class="btn sm ghost" href="${t}" target="_blank" rel="noreferrer">Rappeler</a>
+      </div></div>`;}).join('');
+  }
+
+  h+=`<div class="stitle">Clientes \u00e0 relancer</div>`;
+  if(!dormantes.length){
+    h+=`<p class="hint">Aucune cliente sans visite depuis plus de deux mois.</p>`;
+  } else {
+    h+=`<p class="hint" style="margin-bottom:12px">Sans nouvelle depuis plus de deux mois. Une relance douce fait revenir une cliente sur trois.</p>`;
+    h+=dormantes.map(c=>{
+      const t=waLien(c.tel,`Bonjour ${c.nom||''}, cela fait un moment qu'on ne vous a pas vue \u2728 Je serais ravie de m'occuper de vous \u00e0 nouveau \u2014 sourcils, soin du visage, Carbon Laser\u2026 Vous pouvez choisir votre cr\u00e9neau ici : ${SITE}
+
+\u00c0 tr\u00e8s vite ! Mariame`);
+      return `<div class="card" style="cursor:default"><div class="row">
+        <div><div class="nm">${esc(c.nom||'Sans nom')}</div>
+        <div class="meta">${derniere[c.id]?'Derni\u00e8re visite : '+libDate(derniere[c.id]):'Jamais venue'}</div></div>
+        <a class="btn sm ghost" href="${t}" target="_blank" rel="noreferrer">Relancer</a>
+      </div></div>`;}).join('');
+  }
+
+  h+=`<div class="stitle">Toutes ses clientes</div>`;
+  if(!S.clientes.length){
+    h+=`<div class="empty"><div class="disp">Fichier vide</div><p>Chaque cliente qui cr\u00e9e un compte appara\u00eet ici.</p></div>`;
+  } else {
+    h+=S.clientes.map(c=>{
+      const n=S.rdvs.filter(r=>r.client_id===c.id).length;
+      const t=c.tel?'#':null;
+      return `<div class="card" style="cursor:default"><div class="row">
+        <div><div class="nm">${esc(c.nom||'Sans nom')}</div>
+        <div class="meta">${esc(c.tel||'\u2014')}${c.email?' \u00b7 '+esc(c.email):''}</div>
+        <div class="meta">${n} rendez-vous</div></div>
+        ${t?`<a class="btn sm ghost" href="#" data-wa="${esc(c.tel)}" data-prenom="${esc((c.nom||'').trim().split(' ')[0]||'')}">WhatsApp</a>`:''}
+      </div></div>`;}).join('');
+  }
+  return h+`<button class="btn ghost" id="deconnexion">Se d\u00e9connecter</button>`;
 }
 
 function adminTarifs(){
@@ -762,6 +831,19 @@ const barre = items => `<nav class="tabs">`+items.map(([k,l,i])=>
 function lire(id){ const e=document.getElementById(id); return e?e.value:''; }
 
 function brancher(){
+  document.querySelectorAll('[data-modele]').forEach(b=>b.onclick=()=>{
+    S.campagne=b.dataset.modele; S.texteCampagne=null; rendre();
+  });
+  const tc=document.getElementById('t_campagne');
+  if(tc) tc.oninput=()=>{ S.texteCampagne=tc.value; };
+  document.querySelectorAll('[data-wa]').forEach(b=>b.onclick=e=>{
+    e.preventDefault();
+    const zone=document.getElementById('t_campagne');
+    const base=zone?zone.value:MODELES[S.campagne].texte;
+    const msg=base.replace(/\{nom\}/g, b.dataset.prenom||'').replace(/\{lien\}/g, SITE);
+    window.open(waLien(b.dataset.wa,msg),'_blank');
+  });
+
   document.querySelectorAll('[data-copie]').forEach(b=>b.onclick=async()=>{
     try{ await navigator.clipboard.writeText(b.dataset.copie); toast('Copié'); }
     catch(e){ toast('Sélectionnez le texte pour le copier',true); }
